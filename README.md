@@ -8,7 +8,7 @@ Zero-dependency .NET 8 PDF generation library for creating accessible, standards
 
 ### Installation
 
-1. Download `ObviousPDF.dll` from the [Releases](https://github.com/alanfrans/ObviousPDF/releases) page
+1. Download `ObviousPDF.dll` from [`lib/net8.0/`](https://github.com/alanfrans/ObviousPDF/tree/main/lib/net8.0) in this repository
 2. Add a reference to your .NET 8 project
 3. Import the namespace:
 
@@ -56,7 +56,7 @@ doc.Save("output.pdf");
 
 **$100/year** for organizations with 10+ employees (unlimited developers).
 
-See [LICENSE](docs/license.html) for full details.
+See [LICENSE](LICENSE.md) for full details.
 
 ## Key Characteristics
 
@@ -71,7 +71,7 @@ See [LICENSE](docs/license.html) for full details.
 
 ## Getting Started
 
-1. Download the latest DLL from [Releases](https://github.com/alanfrans/ObviousPDF/releases)
+1. Download `ObviousPDF.dll` from [`lib/net8.0/`](https://github.com/alanfrans/ObviousPDF/tree/main/lib/net8.0) in this repository
 2. Add reference to your .NET 8 project
 3. Read the **[API Reference](docs/API_REFERENCE.md)** for comprehensive documentation
 4. Use the **[LLM Guide](docs/LLM_GUIDE.md)** if working with AI coding assistants
