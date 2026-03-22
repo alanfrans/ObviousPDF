@@ -67,7 +67,7 @@ See [LICENSE](LICENSE.md) for full details.
 | **Bundled Fonts** | 3 (CMU Serif, Sora, CMU Typewriter — SIL OFL 1.1) |
 | **Accessibility** | PDF/UA 1.0 compliant |
 | **Encryption** | AES-128, AES-256, RSA-4096 digital signatures |
-| **Output Formats** | PDF 1.4, PDF/A-1b, PDF/UA-1, linearized |
+| **Output Formats** | PDF 1.7 / 2.0 (auto-detected), PDF/A-1b, PDF/A-2b, PDF/A-3b, PDF/UA-1, linearized |
 
 ## Getting Started
 

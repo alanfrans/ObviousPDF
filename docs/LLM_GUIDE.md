@@ -129,6 +129,35 @@ page.BeginTextBlock()
 var font = PdfEmbeddedFont.FromFile("path/to/font.ttf");
 page.AddText("Hello 世界 مرحبا", 72, 500,
     new PdfTextOptions { EmbeddedFont = font, FontSize = 14 });
+
+// Text alignment — requires Width to be set
+page.AddText("Left-aligned", 72, 460, new PdfTextOptions
+{
+    FontSize = 14,
+    Alignment = PdfTextAlignment.Left,
+    Width = 468
+});
+page.AddText("Center-aligned", 72, 440, new PdfTextOptions
+{
+    FontSize = 14,
+    Alignment = PdfTextAlignment.Center,
+    Width = 468
+});
+page.AddText("Right-aligned", 72, 420, new PdfTextOptions
+{
+    FontSize = 14,
+    Alignment = PdfTextAlignment.Right,
+    Width = 468
+});
+page.AddText("Justified text spreads across the full width.", 72, 400, new PdfTextOptions
+{
+    FontSize = 14,
+    Alignment = PdfTextAlignment.Justify,
+    Width = 468
+});
+
+// Measure text width (useful for layout calculations)
+double width = page.MeasureTextWidth("Hello", new PdfTextOptions { FontSize = 14 });
 ```
 
 ### 4. Vector Graphics
@@ -501,6 +530,26 @@ var name = para.AddChild(StructureType.Span);
 name.Phoneme = "ˈniːtʃə";
 name.PhoneticAlphabet = PdfPhoneticAlphabet.Ipa;
 page.AddTaggedText(name, "Nietzsche", 72, 580);
+```
+
+### Layout Attributes (Text Alignment in Structure Tree)
+
+```csharp
+// Set layout attributes on structure elements for accessibility
+var para = root.AddChild(StructureType.P);
+para.TextAlign = PdfLayoutTextAlign.Center;   // Start, Center, End, Justify
+para.Placement = PdfPlacement.Block;          // Block, Inline, Before, Start, End
+para.LayoutWidth = 468;
+para.LayoutHeight = 50;
+
+// Combine with visual alignment
+page.AddTaggedText(para, "Centered paragraph", 72, 700,
+    new PdfTextOptions
+    {
+        FontSize = 14,
+        Alignment = PdfTextAlignment.Center,
+        Width = 468
+    });
 ```
 
 ### Abbreviation Expansion

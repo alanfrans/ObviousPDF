@@ -617,6 +617,51 @@
             Per WCAG: if C ≤ 0.04045 then C/12.92 else ((C+0.055)/1.055)^2.4
             </summary>
         </member>
+        <member name="T:ObviousPDF.Accessibility.PdfLayoutTextAlign">
+            <summary>
+            Specifies the horizontal alignment of text within a structure element
+            (ISO 32000-2 §14.8.5.4, Table 379 — TextAlign attribute).
+            
+            <para>
+            This enum controls the accessibility-layer TextAlign attribute on structure
+            elements, not the visual rendering. For visual alignment, use
+            <see cref="T:ObviousPDF.PdfTextAlignment"/> on <see cref="T:ObviousPDF.PdfTextOptions"/>.
+            Both should match to ensure consistent accessible and visual behaviour.
+            </para>
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfLayoutTextAlign.Start">
+            <summary>
+            Text is aligned to the start edge (left in LTR scripts, right in RTL).
+            This is the default per ISO 32000-2.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfLayoutTextAlign.Center">
+            <summary>
+            Text is centred between the start and end edges.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfLayoutTextAlign.End">
+            <summary>
+            Text is aligned to the end edge (right in LTR scripts, left in RTL).
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfLayoutTextAlign.Justify">
+            <summary>
+            Text is justified — spacing is adjusted so each line (except the last)
+            extends from the start to the end edge.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Accessibility.PdfLayoutTextAlignExtensions">
+            <summary>
+            Extension methods for <see cref="T:ObviousPDF.Accessibility.PdfLayoutTextAlign"/>.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfLayoutTextAlignExtensions.ToPdfValue(ObviousPDF.Accessibility.PdfLayoutTextAlign)">
+            <summary>
+            Returns the PDF attribute value string for a text alignment value.
+            </summary>
+        </member>
         <member name="T:ObviousPDF.Accessibility.PdfNoteType">
             <summary>
             The type of a <c>/Note</c> structure element, serialized as the
@@ -683,6 +728,52 @@
             <summary>
             Returns the PDF name string for a phonetic alphabet (e.g., "ipa", "x-sampa").
             These values are defined in ISO 32000-2 §14.9.6 Table 393.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Accessibility.PdfPlacement">
+            <summary>
+            Specifies the positioning of a structure element in the block-progression
+            direction (ISO 32000-2 §14.8.5.4, Table 379 — Placement attribute).
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfPlacement.Block">
+            <summary>
+            The element is a block-level element, stacked in the block-progression
+            direction within an enclosing reference area.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfPlacement.Inline">
+            <summary>
+            The element is an inline-level element, packed in the inline-progression
+            direction within an enclosing line area.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfPlacement.Before">
+            <summary>
+            The element is placed before the nearest enclosing reference area
+            in the block-progression direction.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfPlacement.Start">
+            <summary>
+            The element is placed at the start edge of the nearest enclosing
+            reference area in the inline-progression direction.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Accessibility.PdfPlacement.End">
+            <summary>
+            The element is placed at the end edge of the nearest enclosing
+            reference area in the inline-progression direction.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Accessibility.PdfPlacementExtensions">
+            <summary>
+            Extension methods for <see cref="T:ObviousPDF.Accessibility.PdfPlacement"/>.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfPlacementExtensions.ToPdfValue(ObviousPDF.Accessibility.PdfPlacement)">
+            <summary>
+            Returns the PDF attribute value string for a placement value.
             </summary>
         </member>
         <member name="T:ObviousPDF.Accessibility.PdfStructureElement">
@@ -861,6 +952,51 @@
             Required by PDF/UA (ISO 14289-1 §7.3) for Figure elements that appear
             on a single page. Serialized as <c>/A &lt;&lt; /O /Layout /BBox [...] &gt;&gt;</c>.
             </para>
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.PdfStructureElement.Placement">
+            <summary>
+            The placement of the element in the block-progression direction
+            (ISO 32000-2 §14.8.5.4, Table 379).
+            <para>
+            Indicates whether the element is a block-level element, an inline element,
+            or placed at the start/end/before the reference area. Serialized as the
+            <c>/Placement</c> attribute with <c>/O /Layout</c>.
+            </para>
+            <para>
+            Per ISO 14289-2 §8.2.6, layout attributes shall be present when the
+            relevant semantic property is present in the content, has semantic
+            significance, and differs from any default or inherited value.
+            </para>
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.PdfStructureElement.TextAlign">
+            <summary>
+            The horizontal alignment of text content within the element
+            (ISO 32000-2 §14.8.5.4, Table 379 — TextAlign attribute).
+            <para>
+            Values: Start, Center, End, Justify. Serialized as the
+            <c>/TextAlign</c> attribute with <c>/O /Layout</c>.
+            </para>
+            <para>
+            Per ISO 14289-2 §8.2.6, this attribute should be present on structure
+            elements whose text alignment differs from the default (Start) and
+            has semantic significance for accessibility.
+            </para>
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.PdfStructureElement.LayoutWidth">
+            <summary>
+            The desired width of the element's allocation rectangle in the inline
+            direction, in default user-space units (ISO 32000-2 §14.8.5.4, Table 379).
+            Serialized as the <c>/Width</c> attribute with <c>/O /Layout</c>.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.PdfStructureElement.LayoutHeight">
+            <summary>
+            The desired height of the element's allocation rectangle in the block
+            direction, in default user-space units (ISO 32000-2 §14.8.5.4, Table 379).
+            Serialized as the <c>/Height</c> attribute with <c>/O /Layout</c>.
             </summary>
         </member>
         <member name="P:ObviousPDF.Accessibility.PdfStructureElement.Id">
@@ -1979,6 +2115,21 @@
             <summary>
             Provides mapping from <see cref="T:ObviousPDF.Fonts.StandardFont"/> enum values to
             PDF base font names as used in font dictionaries.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Fonts.StandardFontMetrics">
+            <summary>
+            Provides text measurement for the standard 14 PDF fonts by using
+            the bundled open-source substitute fonts (SIL OFL). Since ObviousPDF
+            always embeds these substitutes, the metrics accurately reflect
+            what will appear in the rendered PDF.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Fonts.StandardFontMetrics.MeasureTextWidth(ObviousPDF.Fonts.StandardFont,System.String,System.Double)">
+            <summary>
+            Measures the advance width of a text string in points for a standard font.
+            Uses the bundled substitute font's TrueType metrics.
+            Returns 0 if no substitute is available (Symbol, ZapfDingbats).
             </summary>
         </member>
         <member name="T:ObviousPDF.Fonts.TrueTypeParser">
@@ -4090,7 +4241,7 @@
             <summary>
             Builds a layout attribute dictionary (/A with /O /Layout) for
             structure elements that have layout attributes (§14.8.5.4).
-            Currently supports BBox for Figure elements (PDF/UA §7.3).
+            Supports BBox, Placement, TextAlign, Width, and Height.
             Returns null if no layout attributes are set.
             </summary>
         </member>
@@ -4699,6 +4850,27 @@
             Gets the units-per-em value, used for scaling metrics to PDF units.
             </summary>
         </member>
+        <member name="M:ObviousPDF.PdfEmbeddedFont.MeasureTextWidth(System.String,System.Double)">
+            <summary>
+            Measures the width of a text string in points at the given font size.
+            Uses the font's advance widths from the <c>hmtx</c> table to compute
+            the total horizontal advance (ISO 32000 §9.2.4).
+            <para>
+            This is useful for text alignment, layout calculations, and centering
+            text within a given area.
+            </para>
+            </summary>
+            <param name="text">The text string to measure.</param>
+            <param name="fontSize">The font size in points.</param>
+            <returns>The total advance width of the text in points.</returns>
+            <example>
+            <code>
+            var font = PdfEmbeddedFont.FromFile("Roboto-Regular.ttf");
+            double width = font.MeasureTextWidth("Hello World", 12);
+            // width ≈ 60.5 (depends on the font's metrics)
+            </code>
+            </example>
+        </member>
         <member name="M:ObviousPDF.PdfEmbeddedFont.FromBytes(System.Byte[])">
             <summary>
             Creates a <see cref="T:ObviousPDF.PdfEmbeddedFont"/> from raw TrueType/OpenType font bytes.
@@ -5299,6 +5471,11 @@
             <summary>
             Adds a line of text at the specified position on the page.
             The origin (0,0) is at the bottom-left corner of the page.
+            <para>
+            When <see cref="P:ObviousPDF.PdfTextOptions.Width"/> is set, the <paramref name="x"/>
+            parameter defines the left edge of the alignment box and the text is
+            positioned according to <see cref="P:ObviousPDF.PdfTextOptions.Alignment"/>.
+            </para>
             </summary>
             <param name="text">The text to display.</param>
             <param name="x">Horizontal position in points from the left edge.</param>
@@ -5310,6 +5487,12 @@
             <summary>
             Adds multiple lines of text starting at the specified position.
             Each line is offset downward by the leading value.
+            <para>
+            When <see cref="P:ObviousPDF.PdfTextOptions.Width"/> is set, each line is aligned
+            according to <see cref="P:ObviousPDF.PdfTextOptions.Alignment"/>. For
+            <see cref="F:ObviousPDF.PdfTextAlignment.Justify"/>, all lines except the last
+            are justified; the last line is left-aligned.
+            </para>
             </summary>
             <param name="lines">The lines of text to display.</param>
             <param name="x">Horizontal position in points from the left edge.</param>
@@ -6098,6 +6281,38 @@
             Assigns an MCID to a structure element and registers it for this page.
             </summary>
         </member>
+        <member name="M:ObviousPDF.PdfPageBuilder.MeasureTextWidth(System.String,ObviousPDF.PdfTextOptions)">
+            <summary>
+            Measures the advance width of a text string in points using the
+            specified text options (font and size). Uses the font's glyph
+            metrics to compute the total horizontal advance.
+            <para>
+            For embedded fonts, uses the TrueType <c>hmtx</c> table directly.
+            For standard fonts, uses the bundled substitute font's metrics.
+            </para>
+            </summary>
+            <param name="text">The text string to measure.</param>
+            <param name="options">Text options specifying the font and size. If null, uses defaults (Helvetica 12pt).</param>
+            <returns>The total advance width in points.</returns>
+            <example>
+            <code>
+            var page = doc.AddPage();
+            var opts = new PdfTextOptions { FontSize = 14, Font = StandardFont.Helvetica };
+            double width = page.MeasureTextWidth("Hello World", opts);
+            </code>
+            </example>
+        </member>
+        <member name="M:ObviousPDF.PdfPageBuilder.MeasureTextWidthInternal(System.String,ObviousPDF.PdfTextOptions)">
+            <summary>
+            Internal measurement helper used by alignment logic.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.PdfPageBuilder.CountSpaces(System.String)">
+            <summary>
+            Counts the number of space characters (U+0020) in a string.
+            Used for justify alignment word-spacing calculation.
+            </summary>
+        </member>
         <member name="T:ObviousPDF.EmbeddedFontUsage">
             <summary>
             Tracks usage of an embedded font on a page: which glyphs are used,
@@ -6558,6 +6773,49 @@
         <member name="F:ObviousPDF.PdfStampIcon.ForPublicRelease">
             <summary>For Public Release stamp.</summary>
         </member>
+        <member name="T:ObviousPDF.PdfTextAlignment">
+            <summary>
+            Specifies horizontal text alignment within a given width
+            (ISO 32000-2 §14.8.5.4, Table 379 — TextAlign attribute values).
+            
+            <para>
+            Used with <see cref="P:ObviousPDF.PdfTextOptions.Alignment"/> to control how text
+            is positioned within a specified <see cref="P:ObviousPDF.PdfTextOptions.Width"/>.
+            When <c>Width</c> is set, the text position (<c>x</c> parameter in
+            <see cref="M:ObviousPDF.PdfPageBuilder.AddText(System.String,System.Double,System.Double,ObviousPDF.PdfTextOptions)"/>) represents the left edge of the
+            alignment box.
+            </para>
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.PdfTextAlignment.Left">
+            <summary>
+            Text is aligned to the left (start) edge. This is the default.
+            Equivalent to ISO 32000-2 <c>TextAlign = Start</c>.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.PdfTextAlignment.Center">
+            <summary>
+            Text is centred within the specified width.
+            Equivalent to ISO 32000-2 <c>TextAlign = Center</c>.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.PdfTextAlignment.Right">
+            <summary>
+            Text is aligned to the right (end) edge of the specified width.
+            Equivalent to ISO 32000-2 <c>TextAlign = End</c>.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.PdfTextAlignment.Justify">
+            <summary>
+            Text is justified — word spacing is adjusted so the line fills
+            the entire width. For single-line <see cref="M:ObviousPDF.PdfPageBuilder.AddText(System.String,System.Double,System.Double,ObviousPDF.PdfTextOptions)"/>
+            calls, justify behaves like <see cref="F:ObviousPDF.PdfTextAlignment.Left"/>. For multi-line
+            <see cref="M:ObviousPDF.PdfPageBuilder.AddTextBlock(System.Collections.Generic.IEnumerable{System.String},System.Double,System.Double,ObviousPDF.PdfTextOptions)"/> calls, all lines except
+            the last are justified; the last line is left-aligned.
+            Equivalent to ISO 32000-2 <c>TextAlign = Justify</c>.
+            Uses the <c>Tw</c> (word spacing) operator per §9.3.3.
+            </summary>
+        </member>
         <member name="T:ObviousPDF.PdfTextOptions">
             <summary>
             Options for rendering text on a PDF page.
@@ -6596,6 +6854,42 @@
             <summary>
             The text rendering mode (ISO 32000 §9.3.6). Defaults to <see cref="F:ObviousPDF.PdfTextRenderingMode.Fill"/>.
             Controls whether text is filled, stroked, used as a clipping boundary, or invisible.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.PdfTextOptions.Alignment">
+            <summary>
+            Horizontal text alignment within the specified <see cref="P:ObviousPDF.PdfTextOptions.Width"/>
+            (ISO 32000-2 §14.8.5.4, Table 379 — TextAlign attribute).
+            Defaults to <see cref="F:ObviousPDF.PdfTextAlignment.Left"/>.
+            <para>
+            When <see cref="P:ObviousPDF.PdfTextOptions.Width"/> is set, <see cref="F:ObviousPDF.PdfTextAlignment.Center"/> and
+            <see cref="F:ObviousPDF.PdfTextAlignment.Right"/> shift the text position so that the
+            rendered text is centred or right-aligned within the box. 
+            <see cref="F:ObviousPDF.PdfTextAlignment.Justify"/> adjusts word spacing (<c>Tw</c>
+            operator, §9.3.3) so the line fills the full width.
+            </para>
+            <para>
+            When <see cref="P:ObviousPDF.PdfTextOptions.Width"/> is <c>null</c>, alignment is ignored and the text
+            is placed at the exact (x, y) coordinates.
+            </para>
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.PdfTextOptions.Width">
+            <summary>
+            The width of the text layout box in points. When set, the
+            <see cref="P:ObviousPDF.PdfTextOptions.Alignment"/> property controls how text is positioned
+            within this box.
+            <para>
+            The <c>x</c> parameter in <see cref="M:ObviousPDF.PdfPageBuilder.AddText(System.String,System.Double,System.Double,ObviousPDF.PdfTextOptions)"/> and
+            <see cref="M:ObviousPDF.PdfPageBuilder.AddTextBlock(System.Collections.Generic.IEnumerable{System.String},System.Double,System.Double,ObviousPDF.PdfTextOptions)"/> defines the left edge of
+            the alignment box. For example, with <c>Width = 400</c> and
+            <c>Alignment = Right</c>, text is right-aligned within a 400-point
+            box starting at <c>x</c>.
+            </para>
+            <para>
+            When <c>null</c>, text is positioned at the exact coordinates with
+            no alignment logic applied.
+            </para>
             </summary>
         </member>
         <member name="T:ObviousPDF.PdfTextRenderingMode">

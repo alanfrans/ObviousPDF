@@ -10,6 +10,7 @@
 - [PdfDocument](#pdfdocument)
 - [PdfPageBuilder](#pdfpagebuilder)
 - [PdfTextOptions](#pdftextoptions)
+- [PdfTextAlignment](#pdftextalignment)
 - [PdfDrawOptions](#pdfdrawoptions)
 - [PdfColor](#pdfcolor)
 - [PdfImage](#pdfimage)
@@ -28,6 +29,8 @@
   - [PdfTableScope](#pdftablescope)
   - [PdfPhoneticAlphabet](#pdfphoneticalphabet)
   - [PdfNoteType](#pdfnotetype)
+  - [PdfLayoutTextAlign](#pdflayouttextalign)
+  - [PdfPlacement](#pdfplacement)
   - [PdfColorContrast](#pdfcolorcontrast)
 - [Annotations](#annotations)
   - [PdfAnnotation](#pdfannotation)
@@ -129,6 +132,7 @@ Fluent API for adding content to a single PDF page. All methods return `this` fo
 |--------|-------------|
 | `AddText(string text, double x, double y, PdfTextOptions? options)` | Single line of text at (x, y). |
 | `AddTextBlock(IEnumerable<string> lines, double x, double y, PdfTextOptions? options)` | Multi-line text with auto line advance. |
+| `MeasureTextWidth(string text, PdfTextOptions? options)` | Returns the width (in points) the text would occupy. |
 | `BeginTextBlock()` | Starts a custom text block for fine-grained control. |
 | `EndTextBlock()` | Ends a custom text block. |
 | `SetFont(StandardFont font, double size)` | Sets standard font inside a text block. |
@@ -273,6 +277,17 @@ Fluent API for adding content to a single PDF page. All methods return `this` fo
 | `Color` | `PdfColor` | Black RGB | Text colour. |
 | `Leading` | `double?` | `null` (1.2× size) | Line spacing in points. |
 | `RenderingMode` | `PdfTextRenderingMode` | `Fill` | Rendering mode. |
+| `Alignment` | `PdfTextAlignment` | `Left` | Horizontal text alignment within `Width`. |
+| `Width` | `double?` | `null` | Text box width in points. Required for alignment to take effect. |
+
+### PdfTextAlignment
+
+| Value | Description |
+|-------|-------------|
+| `Left` | Text starts at the given x position (default). |
+| `Center` | Text is centered within the `Width` box. |
+| `Right` | Text is right-aligned within the `Width` box. |
+| `Justify` | Text is spread across the full `Width` via word spacing (Tw operator). Last line of a block is left-aligned. |
 
 ---
 
@@ -360,6 +375,14 @@ PdfColor c = (0.2, 0.4, 0.8);
 | `PdfEmbeddedFont.FromFile(string path)` | Loads a TrueType/OpenType font from file. |
 | `PdfEmbeddedFont.FromStream(Stream stream)` | Loads from stream. |
 | `PdfEmbeddedFont.FromBytes(byte[] data)` | Loads from byte array. |
+| `MeasureTextWidth(string text, double fontSize)` | Returns the width (in points) the text would occupy at the given font size. |
+
+### Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `FamilyName` | `string` | Font family name from the name table. |
+| `UnitsPerEm` | `int` | Design units per em square. |
 
 ---
 
@@ -486,6 +509,10 @@ A node in the PDF structure tree (ISO 32000 §14.7.2).
 | `AssociatedFile` | `PdfAssociatedFile?` | Associated file (PDF/UA-2). |
 | `DestinationPageIndex` | `int?` | TOC item destination page. |
 | `BBox` | `double[]?` | Bounding box [llx, lly, urx, ury]. |
+| `Placement` | `PdfPlacement?` | Layout placement attribute (Block, Inline, etc.). |
+| `TextAlign` | `PdfLayoutTextAlign?` | Layout text-align attribute (Start, Center, End, Justify). |
+| `LayoutWidth` | `double?` | Layout width attribute (points). |
+| `LayoutHeight` | `double?` | Layout height attribute (points). |
 | `Id` | `string?` | Unique ID for header associations. |
 | `Headers` | `IReadOnlyList<string>` | Header IDs for data cells. |
 | `Children` | `IReadOnlyList<PdfStructureElement>` | Child elements in reading order. |
@@ -597,6 +624,29 @@ Runs 43+ checks covering PDF/UA-1, PDF/UA-2, WCAG 2.2, and ISO 32000.
 | `Row` | Header applies to rest of row. |
 | `Column` | Header applies to rest of column. |
 | `Both` | Header applies to row and column. |
+
+### PdfLayoutTextAlign
+
+Layout attribute for text alignment in the structure tree (ISO 32000-2 §14.8.5.4).
+
+| Value | PDF Value | Description |
+|-------|-----------|-------------|
+| `Start` | `/Start` | Aligned to the start edge (left for LTR). |
+| `Center` | `/Center` | Centered. |
+| `End` | `/End` | Aligned to the end edge (right for LTR). |
+| `Justify` | `/Justify` | Justified to fill the available width. |
+
+### PdfPlacement
+
+Layout attribute for element placement (ISO 32000-2 §14.8.5.4).
+
+| Value | PDF Value | Description |
+|-------|-----------|-------------|
+| `Block` | `/Block` | Stacked in block-progression direction. |
+| `Inline` | `/Inline` | Packed in inline-progression direction. |
+| `Before` | `/Before` | Placed before the edge of the reference area. |
+| `Start` | `/Start` | Placed on the start edge. |
+| `End` | `/End` | Placed on the end edge. |
 
 ### PdfColorContrast
 
