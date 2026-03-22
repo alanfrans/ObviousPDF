@@ -45,10 +45,10 @@ doc.Save("output.pdf");
 
 ## Documentation
 
-- **[API Reference](docs/API_REFERENCE.md)** — Complete class and method documentation
-- **[LLM Guide](docs/LLM_GUIDE.md)** — Comprehensive guide for AI coding assistants (ChatGPT, Claude, etc.)
+- **[API Reference](https://obviouspdf.com/api-reference.html)** — Complete class and method documentation
+- **[LLM Guide](https://github.com/alanfrans/ObviousPDF/blob/main/docs/LLM_GUIDE.md)** — Comprehensive guide for AI coding assistants (ChatGPT, Claude, etc.)
 - **[Full Documentation Site](https://obviouspdf.com)** — Examples, tutorials, and more
-- **[License Agreement](LICENSE.md)** — Licensing terms and conditions
+- **[License Agreement](https://obviouspdf.com/license.html)** — Licensing terms and conditions
 
 ## Licensing
 
@@ -56,7 +56,7 @@ doc.Save("output.pdf");
 
 **$100/year** for organizations with 10+ employees (unlimited developers).
 
-See [LICENSE](LICENSE.md) for full details.
+See [LICENSE](https://obviouspdf.com/license.html) for full details.
 
 ## Key Characteristics
 
@@ -73,8 +73,8 @@ See [LICENSE](LICENSE.md) for full details.
 
 1. Download `ObviousPDF.dll` from [`lib/net8.0/`](https://github.com/alanfrans/ObviousPDF/tree/main/lib/net8.0) in this repository
 2. Add reference to your .NET 8 project
-3. Read the **[API Reference](docs/API_REFERENCE.md)** for comprehensive documentation
-4. Use the **[LLM Guide](docs/LLM_GUIDE.md)** if working with AI coding assistants
+3. Read the **[API Reference](https://obviouspdf.com/api-reference.html)** for comprehensive documentation
+4. Use the **[LLM Guide](https://github.com/alanfrans/ObviousPDF/blob/main/docs/LLM_GUIDE.md)** if working with AI coding assistants
 5. Visit **[obviouspdf.com](https://obviouspdf.com)** for examples and tutorials
 
 ## Support
@@ -85,7 +85,6 @@ For issues, feature requests, or questions:
 
 ## Roadmap
 
-- [ ] NuGet package distribution (coming soon)
 - [ ] Form XObject templates library
 - [ ] Barcode & QR code support
 - [ ] Advanced typography (kerning, ligatures)
