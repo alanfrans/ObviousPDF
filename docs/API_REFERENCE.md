@@ -54,6 +54,21 @@
 - [Conformance](#conformance)
   - [PdfAConformanceLevel](#pdfaconformancelevel)
   - [PdfUaConformanceLevel](#pdfuaconformancelevel)
+  - [PdfEncryptionAlgorithm](#pdfencryptionalgorithm)
+- [Enumerations Reference](#enumerations-reference)
+  - [PdfTextDecoration](#pdftextdecoration-flags-enum)
+  - [PdfTextAlignment](#pdftextalignment)
+  - [PdfTextRenderingMode](#pdftextrenderingmode)
+  - [PdfColorSpace](#pdfcolorspace)
+  - [PdfColor Named Constants](#pdfcolor-named-constants)
+  - [PdfLineCap](#pdflinecap)
+  - [PdfLineJoin](#pdflinejoin)
+  - [PdfPageLabelStyle](#pdfpagelabelstyle)
+  - [PdfLayoutTextAlign](#pdflayouttextalign)
+  - [PdfPlacement](#pdfplacement)
+  - [PdfPhoneticAlphabet](#pdfphoneticalphabet)
+  - [PdfNoteType](#pdfnotetype)
+  - [BundledFonts](#bundledfonts)
 
 ---
 
@@ -273,6 +288,64 @@ Fluent API for adding content to a single PDF page. All methods return `this` fo
 | `Color` | `PdfColor` | Black RGB | Text colour. |
 | `Leading` | `double?` | `null` (1.2× size) | Line spacing in points. |
 | `RenderingMode` | `PdfTextRenderingMode` | `Fill` | Rendering mode. |
+| `Alignment` | `PdfTextAlignment` | `Left` | Horizontal text alignment (requires `Width`). |
+| `Width` | `double?` | `null` | Width of the text layout box in points. When set, `Alignment` controls positioning. |
+| `Decoration` | `PdfTextDecoration` | `None` | Text decoration lines (underline, strikethrough, overline). Flags enum — combine with `\|`. |
+| `DecorationColor` | `PdfColor?` | `null` | Colour of decoration lines. When `null`, uses text `Color`. |
+| `DecorationThickness` | `double?` | `null` | Thickness of decoration lines in points. When `null`, defaults to ~1/18 of font size. |
+| `Superscript` | `bool` | `false` | Renders text as superscript (raised baseline, ~58% font size). Uses PDF text rise operator (Ts). |
+| `Subscript` | `bool` | `false` | Renders text as subscript (lowered baseline, ~58% font size). Uses PDF text rise operator (Ts). |
+| `OutlineColor` | `PdfColor?` | `null` | Text outline stroke colour. When set, switches to FillAndStroke rendering mode. |
+| `OutlineWidth` | `double?` | `null` | Text outline stroke width in points. Defaults to 0.5 if not specified. |
+| `BackgroundColor` | `PdfColor?` | `null` | Background colour drawn behind the text (highlight effect). |
+| `ShadowColor` | `PdfColor?` | `null` | Drop shadow colour. When set, a shadow copy is drawn at the specified offset. |
+| `ShadowOffsetX` | `double` | `1.0` | Horizontal shadow offset in points (positive = right). |
+| `ShadowOffsetY` | `double` | `-1.0` | Vertical shadow offset in points (negative = down in PDF coordinates). |
+| `Rotation` | `double` | `0` | Rotation angle in degrees, counter-clockwise. Rotates the text and all associated rendering (background, shadow, decoration lines) around the text anchor point. Applies to `AddText`, `AddTextBlock`, `AddTaggedText`, and `AddTaggedTextBlock`. |
+
+### Text Rotation Examples
+
+```csharp
+// 45-degree diagonal text
+page.AddText("Diagonal", 200, 400, new PdfTextOptions { Rotation = 45 });
+
+// Vertical text — reads bottom to top
+page.AddText("Vertical", 400, 300, new PdfTextOptions { Rotation = 90, FontSize = 14 });
+
+// Vertical text — reads top to bottom
+page.AddText("Downward", 450, 600, new PdfTextOptions { Rotation = -90, FontSize = 14 });
+
+// White text on a black background
+page.AddText("White on Black", 72, 350, new PdfTextOptions
+{
+    Color = PdfColor.FromRgb(1, 1, 1),
+    BackgroundColor = PdfColor.Black,
+    FontSize = 16
+});
+
+// Rotation with coloured background — background rotates with the text
+page.AddText("Rotated highlight", 200, 500, new PdfTextOptions
+{
+    Rotation = 30,
+    BackgroundColor = PdfColor.FromRgb(1.0, 1.0, 0.0),
+    FontSize = 14
+});
+
+// Multi-line rotated block
+page.AddTextBlock(new[] { "Line 1", "Line 2", "Line 3" }, 300, 500,
+    new PdfTextOptions { Rotation = 20, FontSize = 12 });
+
+// Tagged (accessible) rotated text
+var para = root.AddChild(StructureType.P);
+page.AddTaggedText(para, "Rotated accessible text", 200, 400,
+    new PdfTextOptions { Rotation = 45, FontSize = 14 });
+```
+
+> **Implementation note:** `Rotation` uses a PDF CTM (`cm` operator) wrapped in a
+> `q`/`Q` graphics-state save/restore. This means background rectangles, drop shadows,
+> and decoration lines all rotate together with the text. For rotating arbitrary
+> graphics (shapes, images), use `SaveGraphicsState()` / `Rotate()` /
+> `RestoreGraphicsState()` on `PdfPageBuilder` instead.
 
 ---
 
@@ -662,6 +735,202 @@ Static utility for WCAG contrast checking.
 ### PdfUaConformanceLevel
 
 `None`, `PdfUA1`, `PdfUA2`
+
+### PdfEncryptionAlgorithm
+
+`Aes128`, `Aes256`
+
+---
+
+## Enumerations Reference
+
+### PdfTextDecoration (Flags Enum)
+
+**Namespace:** `ObviousPDF`
+
+Specifies text decoration lines (ISO 32000 §9.3, §8.5). Multiple values can be combined with bitwise OR.
+
+| Value | Int | Description |
+|-------|-----|-------------|
+| `None` | `0` | No decoration (default). |
+| `Underline` | `1` | Line below the text baseline. |
+| `Strikethrough` | `2` | Line through the middle of the text. |
+| `Overline` | `4` | Line above the text at the ascender position. |
+
+```csharp
+// Combine multiple decorations
+var opts = new PdfTextOptions
+{
+    Decoration = PdfTextDecoration.Underline | PdfTextDecoration.Strikethrough
+};
+```
+
+### PdfTextAlignment
+
+**Namespace:** `ObviousPDF`
+
+Horizontal text alignment within a specified width (ISO 32000-2 §14.8.5.4).
+
+| Value | Description |
+|-------|-------------|
+| `Left` | Left-aligned (default). |
+| `Center` | Centred within the width. |
+| `Right` | Right-aligned within the width. |
+| `Justify` | Word spacing adjusted to fill the width. Last line is left-aligned in text blocks. |
+
+### PdfTextRenderingMode
+
+**Namespace:** `ObviousPDF`
+
+Text rendering modes (ISO 32000 §9.3.6, Table 106).
+
+| Value | Mode | Description |
+|-------|------|-------------|
+| `Fill` | 0 | Fill text (default). |
+| `Stroke` | 1 | Stroke (outline only). |
+| `FillAndStroke` | 2 | Fill and stroke. |
+| `Invisible` | 3 | Invisible (for searchable text over images). |
+| `FillAndClip` | 4 | Fill and add to clipping path. |
+| `StrokeAndClip` | 5 | Stroke and add to clipping path. |
+| `FillStrokeAndClip` | 6 | Fill, stroke, and clip. |
+| `Clip` | 7 | Add to clipping path only. |
+
+### PdfColorSpace
+
+**Namespace:** `ObviousPDF`
+
+PDF device colour spaces (ISO 32000 §8.6.4).
+
+| Value | Description |
+|-------|-------------|
+| `DeviceGray` | Single gray component. Operators: `g` / `G`. |
+| `DeviceRGB` | Red, green, blue components. Operators: `rg` / `RG`. |
+| `DeviceCMYK` | Cyan, magenta, yellow, key (black) components. Operators: `k` / `K`. |
+
+### PdfColor Named Constants
+
+| Constant | Value |
+|----------|-------|
+| `PdfColor.Black` | RGB (0, 0, 0) |
+| `PdfColor.White` | RGB (1, 1, 1) |
+| `PdfColor.Red` | RGB (1, 0, 0) |
+| `PdfColor.Green` | RGB (0, 1, 0) |
+| `PdfColor.Blue` | RGB (0, 0, 1) |
+
+### PdfLineCap
+
+**Namespace:** `ObviousPDF`
+
+Line cap styles (ISO 32000 §8.4.3.3).
+
+| Value | Description |
+|-------|-------------|
+| `Butt` | Squared off at the endpoint (default). |
+| `Round` | Semicircular arc at the endpoint. |
+| `ProjectingSquare` | Stroke extends beyond endpoint by half the line width. |
+
+### PdfLineJoin
+
+**Namespace:** `ObviousPDF`
+
+Line join styles (ISO 32000 §8.4.3.4).
+
+| Value | Description |
+|-------|-------------|
+| `Miter` | Outer edges extended until they meet (default). |
+| `Round` | Circular arc at the join point. |
+| `Bevel` | Triangle fill between butt-capped ends. |
+
+### PdfPageLabelStyle
+
+**Namespace:** `ObviousPDF`
+
+Page label numbering styles (ISO 32000 §12.4.2).
+
+| Value | Description |
+|-------|-------------|
+| `Decimal` | Arabic numerals (1, 2, 3…). |
+| `UpperRoman` | Uppercase Roman (I, II, III…). |
+| `LowerRoman` | Lowercase Roman (i, ii, iii…). |
+| `UpperAlpha` | Uppercase letters (A, B, C…). |
+| `LowerAlpha` | Lowercase letters (a, b, c…). |
+| `None` | No numbering; prefix only. |
+
+### PdfLayoutTextAlign
+
+**Namespace:** `ObviousPDF.Accessibility`
+
+Accessibility-layer text alignment attribute (ISO 32000-2 §14.8.5.4, Table 379).
+
+| Value | Description |
+|-------|-------------|
+| `Start` | Aligned to start edge (left in LTR). Default. |
+| `Center` | Centred between start and end edges. |
+| `End` | Aligned to end edge (right in LTR). |
+| `Justify` | Spacing adjusted so lines fill full width. |
+
+### PdfPlacement
+
+**Namespace:** `ObviousPDF.Accessibility`
+
+Structure element positioning (ISO 32000-2 §14.8.5.4, Table 379).
+
+| Value | Description |
+|-------|-------------|
+| `Block` | Block-level element. |
+| `Inline` | Inline-level element. |
+| `Before` | Placed before enclosing reference area. |
+| `Start` | Placed at start edge of reference area. |
+| `End` | Placed at end edge of reference area. |
+
+### PdfPhoneticAlphabet
+
+**Namespace:** `ObviousPDF.Accessibility`
+
+Phonetic notation systems for pronunciation hints (PDF 2.0, ISO 32000-2 §14.9.6).
+
+| Value | Description |
+|-------|-------------|
+| `Ipa` | International Phonetic Alphabet. |
+| `XSampa` | Extended Speech Assessment Methods Phonetic Alphabet (ASCII-compatible). |
+
+### PdfNoteType
+
+**Namespace:** `ObviousPDF.Accessibility`
+
+Note structure element types (ISO 32000-2 §14.8.4.4.2).
+
+| Value | Description |
+|-------|-------------|
+| `Footnote` | Note at the bottom of the page. |
+| `Endnote` | Note at the end of a section or document. |
+| `Rearnote` | Note at the back of a publication. |
+
+### BundledFonts
+
+**Namespace:** `ObviousPDF.Fonts`
+
+Open-source fonts (SIL OFL) bundled as embedded resources. Drop-in substitutes for the standard 14 fonts.
+
+| Property | Family | Style | Substitutes |
+|----------|--------|-------|-------------|
+| `SerifRegular` | CMU Serif | Regular | Times-Roman |
+| `SerifBold` | CMU Serif | Bold | Times-Bold |
+| `SerifItalic` | CMU Serif | Italic | Times-Italic |
+| `SerifBoldItalic` | CMU Serif | Bold Italic | Times-BoldItalic |
+| `SansRegular` | Sora | Regular | Helvetica |
+| `SansBold` | Sora | Bold | Helvetica-Bold |
+| `SansItalic` | Sora | Italic | Helvetica-Oblique |
+| `SansBoldItalic` | Sora | Bold Italic | Helvetica-BoldOblique |
+| `MonoRegular` | CMU Typewriter | Regular | Courier |
+| `MonoBold` | CMU Typewriter | Bold | Courier-Bold |
+| `MonoItalic` | CMU Typewriter | Italic | Courier-Oblique |
+| `MonoBoldItalic` | CMU Typewriter | Bold Italic | Courier-BoldOblique |
+
+| Method | Description |
+|--------|-------------|
+| `GetSubstitute(StandardFont font)` | Returns the bundled substitute for a standard font (or `null` for Symbol/ZapfDingbats). |
+| `HasSubstitute(StandardFont font)` | Returns `true` if a substitute exists. |
 
 ---
 

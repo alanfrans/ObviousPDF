@@ -5,6 +5,16 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.0.3] — 2025-07-13
+
+### Added
+
+- **Text decorations** — Underline, strikethrough, overline, superscript, subscript, text outline, text background (highlight), and drop shadow. All decorations work with standard and embedded fonts, all four text methods, and text alignment. New `PdfTextDecoration` flags enum and new properties on `PdfTextOptions`: `Decoration`, `DecorationColor`, `DecorationThickness`, `Superscript`, `Subscript`, `OutlineColor`, `OutlineWidth`, `BackgroundColor`, `ShadowColor`, `ShadowOffsetX`, `ShadowOffsetY`.
+
+- **Text rotation** — Arbitrary counter-clockwise rotation for all text rendering methods (`AddText`, `AddTextBlock`, `AddTaggedText`, `AddTaggedTextBlock`). Background rectangles, drop shadows, and decoration lines rotate together with the text. New `Rotation` property on `PdfTextOptions` (degrees CCW, default `0`). Implemented via PDF CTM `cm` operator (ISO 32000 §8.3.4).
+
+---
+
 ## [1.0.1] — 2025-07-12
 
 ### Added

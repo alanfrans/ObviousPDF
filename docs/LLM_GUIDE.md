@@ -160,6 +160,210 @@ page.AddText("Justified text spreads across the full width.", 72, 400, new PdfTe
 double width = page.MeasureTextWidth("Hello", new PdfTextOptions { FontSize = 14 });
 ```
 
+### 3b. Italic / Bold Fonts
+
+ObviousPDF supports italic and bold text through font selection (not a style toggle).
+
+```csharp
+using ObviousPDF.Fonts;
+
+// Standard 14 fonts — italic and bold variants
+page.AddText("Italic serif", 72, 680, new PdfTextOptions
+{
+    Font = StandardFont.TimesItalic, FontSize = 14
+});
+page.AddText("Bold sans-serif", 72, 660, new PdfTextOptions
+{
+    Font = StandardFont.HelveticaBold, FontSize = 14
+});
+page.AddText("Bold italic serif", 72, 640, new PdfTextOptions
+{
+    Font = StandardFont.TimesBoldItalic, FontSize = 14
+});
+page.AddText("Oblique monospace", 72, 620, new PdfTextOptions
+{
+    Font = StandardFont.CourierOblique, FontSize = 14
+});
+
+// Bundled embedded fonts — italic and bold variants
+page.AddText("Embedded italic serif", 72, 600, new PdfTextOptions
+{
+    EmbeddedFont = BundledFonts.SerifItalic, FontSize = 14
+});
+page.AddText("Embedded bold sans", 72, 580, new PdfTextOptions
+{
+    EmbeddedFont = BundledFonts.SansBold, FontSize = 14
+});
+page.AddText("Embedded bold italic mono", 72, 560, new PdfTextOptions
+{
+    EmbeddedFont = BundledFonts.MonoBoldItalic, FontSize = 14
+});
+
+// Auto-substitute: get embedded equivalent of a standard font
+var font = BundledFonts.GetSubstitute(StandardFont.HelveticaOblique);
+page.AddText("Substituted italic", 72, 540, new PdfTextOptions
+{
+    EmbeddedFont = font, FontSize = 14
+});
+```
+
+### 3c. Text Decorations
+
+```csharp
+// Underline
+page.AddText("Underlined text", 72, 500, new PdfTextOptions
+{
+    FontSize = 14,
+    Decoration = PdfTextDecoration.Underline
+});
+
+// Strikethrough
+page.AddText("Deleted text", 72, 480, new PdfTextOptions
+{
+    FontSize = 14,
+    Decoration = PdfTextDecoration.Strikethrough
+});
+
+// Overline
+page.AddText("Overlined text", 72, 460, new PdfTextOptions
+{
+    FontSize = 14,
+    Decoration = PdfTextDecoration.Overline
+});
+
+// Combined decorations (flags enum — use bitwise OR)
+page.AddText("Underline + Strikethrough", 72, 440, new PdfTextOptions
+{
+    FontSize = 14,
+    Decoration = PdfTextDecoration.Underline | PdfTextDecoration.Strikethrough
+});
+
+// Custom decoration colour and thickness
+page.AddText("Red thick underline", 72, 420, new PdfTextOptions
+{
+    FontSize = 14,
+    Decoration = PdfTextDecoration.Underline,
+    DecorationColor = PdfColor.Red,
+    DecorationThickness = 2.0
+});
+
+// Superscript (E=mc²)
+page.AddText("E=mc", 72, 400);
+page.AddText("2", 108, 400, new PdfTextOptions
+{
+    FontSize = 14,
+    Superscript = true
+});
+
+// Subscript (H₂O)
+page.AddText("H", 72, 380);
+page.AddText("2", 82, 380, new PdfTextOptions
+{
+    FontSize = 14,
+    Subscript = true
+});
+page.AddText("O", 90, 380);
+
+// Text outline
+page.AddText("Outlined heading", 72, 350, new PdfTextOptions
+{
+    FontSize = 24,
+    OutlineColor = PdfColor.Red,
+    OutlineWidth = 1.0
+});
+
+// Text background (highlight)
+page.AddText("Highlighted text", 72, 320, new PdfTextOptions
+{
+    FontSize = 14,
+    BackgroundColor = PdfColor.FromRgb(1.0, 1.0, 0.0)  // Yellow
+});
+
+// Text shadow
+page.AddText("Shadow text", 72, 290, new PdfTextOptions
+{
+    FontSize = 18,
+    ShadowColor = PdfColor.FromGray(0.7),
+    ShadowOffsetX = 2.0,
+    ShadowOffsetY = -2.0
+});
+
+// All decorations combined
+page.AddText("Fully decorated", 72, 260, new PdfTextOptions
+{
+    FontSize = 18,
+    Decoration = PdfTextDecoration.Underline | PdfTextDecoration.Strikethrough,
+    DecorationColor = PdfColor.Blue,
+    DecorationThickness = 1.5,
+    OutlineColor = PdfColor.Red,
+    OutlineWidth = 0.5,
+    BackgroundColor = PdfColor.FromRgb(1.0, 1.0, 0.8),
+    ShadowColor = PdfColor.FromGray(0.5)
+});
+
+// Decorations with tagged text (accessible)
+page.AddTaggedText(para, "Tagged underlined text", 72, 230, new PdfTextOptions
+{
+    FontSize = 14,
+    Decoration = PdfTextDecoration.Underline
+});
+```
+
+### 3d. Text Rotation
+
+Set `PdfTextOptions.Rotation` to rotate text counter-clockwise around its anchor point.
+The background, drop shadow, and decoration lines all rotate with the text.
+Works with `AddText`, `AddTextBlock`, `AddTaggedText`, and `AddTaggedTextBlock`.
+
+```csharp
+// 45-degree diagonal text
+page.AddText("Diagonal", 200, 400, new PdfTextOptions { Rotation = 45 });
+
+// Vertical text — reads bottom to top
+page.AddText("Vertical", 400, 300, new PdfTextOptions { Rotation = 90, FontSize = 14 });
+
+// Vertical text — reads top to bottom
+page.AddText("Downward", 450, 600, new PdfTextOptions { Rotation = -90, FontSize = 14 });
+
+// White text on a black background (no rotation needed)
+page.AddText("White on Black", 72, 350, new PdfTextOptions
+{
+    Color = PdfColor.FromRgb(1, 1, 1),
+    BackgroundColor = PdfColor.Black,
+    FontSize = 16
+});
+
+// Rotation combined with background — the background rectangle rotates too
+page.AddText("Rotated highlight", 200, 500, new PdfTextOptions
+{
+    Rotation = 30,
+    BackgroundColor = PdfColor.FromRgb(1.0, 1.0, 0.0),
+    FontSize = 14
+});
+
+// White text on black + rotated
+page.AddText("Rotated White on Black", 72, 250, new PdfTextOptions
+{
+    Color = PdfColor.FromRgb(1, 1, 1),
+    BackgroundColor = PdfColor.Black,
+    FontSize = 16,
+    Rotation = 15
+});
+
+// Multi-line rotated block
+page.AddTextBlock(new[] { "Line 1", "Line 2", "Line 3" }, 300, 500,
+    new PdfTextOptions { Rotation = 20, FontSize = 12 });
+
+// Tagged (accessible) rotated text
+var para = root.AddChild(StructureType.P);
+page.AddTaggedText(para, "Rotated accessible text", 200, 400,
+    new PdfTextOptions { Rotation = 45, FontSize = 14 });
+```
+
+> **Note:** For rotating shapes or images use `SaveGraphicsState()` / `Rotate()` /
+> `RestoreGraphicsState()`. `PdfTextOptions.Rotation` is the simpler, self-contained
+> option specifically for text.
+
 ### 4. Vector Graphics
 
 ```csharp
@@ -221,7 +425,11 @@ page.AddImageScaled(png, 72, 400, maxWidth: 300, maxHeight: 200);
 ### 6. Transforms, Clipping, Transparency
 
 ```csharp
-// Rotation (around a point)
+// Text rotation — simplest approach, use PdfTextOptions.Rotation
+page.AddText("Diagonal", 200, 400, new PdfTextOptions { Rotation = 45 });
+page.AddText("Vertical", 400, 300, new PdfTextOptions { Rotation = 90 });
+
+// Graphics rotation (around a point) — for shapes and images
 page.SaveGraphicsState()
     .Translate(300, 500)
     .Rotate(45)
@@ -677,3 +885,118 @@ doc.Sign("signed.pdf", signature);
 // Signed to stream
 doc.Sign(stream, signature);
 ```
+
+---
+
+## Enumerations Quick Reference
+
+### PdfTextDecoration (Flags Enum)
+
+| Value | Int | Description |
+|-------|-----|-------------|
+| `None` | `0` | No decoration (default). |
+| `Underline` | `1` | Line below the baseline. |
+| `Strikethrough` | `2` | Line through the middle. |
+| `Overline` | `4` | Line above at ascender. |
+
+Combine with `|`: `PdfTextDecoration.Underline | PdfTextDecoration.Strikethrough`
+
+### PdfTextAlignment
+
+`Left` (default), `Center`, `Right`, `Justify`
+
+> Requires `PdfTextOptions.Width` to be set. Without `Width`, alignment is ignored.
+
+### PdfTextRenderingMode
+
+`Fill` (0, default), `Stroke` (1), `FillAndStroke` (2), `Invisible` (3), `FillAndClip` (4), `StrokeAndClip` (5), `FillStrokeAndClip` (6), `Clip` (7)
+
+### StandardFont
+
+| Serif | Sans-Serif | Monospace | Special |
+|-------|------------|-----------|----------|
+| `TimesRoman` | `Helvetica` | `Courier` | `Symbol` |
+| `TimesBold` | `HelveticaBold` | `CourierBold` | `ZapfDingbats` |
+| `TimesItalic` | `HelveticaOblique` | `CourierOblique` | |
+| `TimesBoldItalic` | `HelveticaBoldOblique` | `CourierBoldOblique` | |
+
+### BundledFonts (Embedded Substitutes)
+
+| Serif (CMU Serif) | Sans (Sora) | Mono (CMU Typewriter) |
+|-------------------|-------------|------------------------|
+| `SerifRegular` | `SansRegular` | `MonoRegular` |
+| `SerifBold` | `SansBold` | `MonoBold` |
+| `SerifItalic` | `SansItalic` | `MonoItalic` |
+| `SerifBoldItalic` | `SansBoldItalic` | `MonoBoldItalic` |
+
+Use `BundledFonts.GetSubstitute(StandardFont)` to auto-map.
+
+### PdfColor Named Constants
+
+`PdfColor.Black`, `PdfColor.White`, `PdfColor.Red`, `PdfColor.Green`, `PdfColor.Blue`
+
+Factory methods: `PdfColor.FromRgb(r, g, b)`, `PdfColor.FromGray(gray)`, `PdfColor.FromCmyk(c, m, y, k)`
+
+### PdfColorSpace
+
+`DeviceGray`, `DeviceRGB`, `DeviceCMYK`
+
+### PdfLineCap
+
+`Butt` (default), `Round`, `ProjectingSquare`
+
+### PdfLineJoin
+
+`Miter` (default), `Round`, `Bevel`
+
+### PdfPageLabelStyle
+
+`Decimal`, `UpperRoman`, `LowerRoman`, `UpperAlpha`, `LowerAlpha`, `None`
+
+### PdfArtifactType
+
+`Pagination`, `Layout`, `Page`, `Background`
+
+### PdfTableScope
+
+`Row`, `Column`, `Both`
+
+### PdfAnnotationType
+
+`Text`, `FreeText`, `Highlight`, `Underline`, `Squiggly`, `StrikeOut`, `Stamp`
+
+### PdfStampIcon
+
+`Approved`, `Experimental`, `NotApproved`, `AsIs`, `Expired`, `NotForPublicRelease`, `Confidential`, `Final`, `Sold`, `Departmental`, `ForComment`, `TopSecret`, `Draft`, `ForPublicRelease`
+
+### PdfLayoutTextAlign (Accessibility)
+
+`Start` (default), `Center`, `End`, `Justify`
+
+### PdfPlacement (Accessibility)
+
+`Block`, `Inline`, `Before`, `Start`, `End`
+
+### PdfPhoneticAlphabet
+
+`Ipa`, `XSampa`
+
+### PdfNoteType
+
+`Footnote`, `Endnote`, `Rearnote`
+
+### PdfEncryptionAlgorithm
+
+`Aes128`, `Aes256`
+
+### PdfAConformanceLevel
+
+`None`, `PdfA1B`, `PdfA2B`, `PdfA3B`
+
+### PdfUaConformanceLevel
+
+`None`, `PdfUA1`, `PdfUA2`
+
+### PageSize Constants
+
+`PageSize.Letter` (612×792), `PageSize.Legal` (612×1008), `PageSize.A4` (595.28×841.89), `PageSize.A3` (841.89×1190.55), `PageSize.A5` (419.53×595.28), `PageSize.Tabloid` (792×1224)
