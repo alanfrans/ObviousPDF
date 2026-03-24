@@ -4641,6 +4641,13 @@
         <member name="P:ObviousPDF.PdfDocumentInfo.Creator">
             <summary>The name of the application that created the original content.</summary>
         </member>
+        <member name="P:ObviousPDF.PdfDocumentInfo.Producer">
+            <summary>
+            The name of the product that produced this PDF.
+            This is automatically set to "ObviousPDF {version} (https://obviouspdf.com)"
+            and cannot be overridden.
+            </summary>
+        </member>
         <member name="T:ObviousPDF.PdfDocumentPart">
              <summary>
              Represents a node in the document part hierarchy (ISO 32000-2 §14.12).

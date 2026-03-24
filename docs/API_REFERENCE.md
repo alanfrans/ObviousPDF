@@ -1,7 +1,7 @@
 # ObviousPDF API Reference
 
-> Complete API reference for ObviousPDF — a zero-dependency .NET 8 PDF generation library
-> built from the ISO 32000 (PDF 1.7 / PDF 2.0) specification.
+> Complete API reference for ObviousPDF — helping .NET developers create standards-compliant,
+> more accessible PDF documents. Built from the ISO 32000 (PDF 1.7 / PDF 2.0) specification.
 
 ---
 

@@ -1,8 +1,8 @@
 # ObviousPDF
 
-Zero-dependency .NET 8 PDF generation library for creating accessible, standards-compliant PDFs.
+Enabling you create standards-compliant, more accessible PDFs in .NET.
 
-**Built from ISO 32000. Accessible by default.**
+**Built from ISO 32000. Accessibility-first by design.**
 
 ## Quick Start
 

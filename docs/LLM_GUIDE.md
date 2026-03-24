@@ -8,7 +8,7 @@
 
 ## Overview
 
-**ObviousPDF** is a zero-dependency .NET 8 PDF generation library built from ISO 32000.
+**ObviousPDF** enables .NET developers to create standards-compliant, more accessible PDFs. It is a zero-dependency .NET 8 library built from ISO 32000.
 
 - **Namespace:** `ObviousPDF` (main), `ObviousPDF.Accessibility` (tagged PDF), `ObviousPDF.Fonts` (fonts)
 - **Entry point:** `new PdfDocument()`
