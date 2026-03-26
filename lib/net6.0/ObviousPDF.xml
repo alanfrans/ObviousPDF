@@ -1627,6 +1627,15 @@
             path construction and painting operators (§8.5).
             </summary>
         </member>
+        <member name="M:ObviousPDF.Content.ContentStreamBuilder.Fmt(System.Double)">
+            <summary>
+            Formats a double as a PDF real number (ISO 32000 §7.3.3).
+            PDF content streams only support integer and fixed-point real number
+            notation — scientific notation (e.g. "6.12E-17") is NOT valid.
+            Values very close to zero (floating-point artifacts from trig) are
+            snapped to exactly 0.
+            </summary>
+        </member>
         <member name="M:ObviousPDF.Content.ContentStreamBuilder.BeginText">
             <summary>
             Begins a text object (BT operator, §9.4.1).
@@ -2231,6 +2240,19 @@
         <member name="M:ObviousPDF.Fonts.TrueTypeSubsetter.Subset(System.Byte[],System.Collections.Generic.Dictionary{System.String,System.ValueTuple{System.UInt32,System.UInt32}},System.Collections.Generic.HashSet{System.UInt16},System.Collections.Generic.Dictionary{System.Byte,System.UInt16},System.UInt16,System.UInt16,System.Int16)">
             <summary>
             Legacy overload that returns only the subset font bytes.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Fonts.TrueTypeSubsetter.RemapCompositeGlyphReferences(System.Byte[],System.Collections.Generic.Dictionary{System.UInt16,System.UInt16})">
+            <summary>
+            Rewrites component glyph ID references in a composite glyph's data
+            to use the remapped GIDs from the subset font.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Fonts.TrueTypeSubsetter.BuildPostFormat3">
+            <summary>
+            Builds a minimal post table in format 3.0 (§5.5.1).
+            Format 3.0 provides no glyph name data, which is safe for subsets
+            where the original format 2.0 per-glyph name count would mismatch.
             </summary>
         </member>
         <member name="M:ObviousPDF.Fonts.TrueTypeSubsetter.BuildCmap(System.Collections.Generic.Dictionary{System.Byte,System.UInt16},System.Collections.Generic.Dictionary{System.UInt16,System.UInt16})">
@@ -4640,6 +4662,13 @@
         </member>
         <member name="P:ObviousPDF.PdfDocumentInfo.Creator">
             <summary>The name of the application that created the original content.</summary>
+        </member>
+        <member name="P:ObviousPDF.PdfDocumentInfo.Producer">
+            <summary>
+            The name of the product that produced this PDF.
+            This is automatically set to "ObviousPDF {version} (https://obviouspdf.com)"
+            and cannot be overridden.
+            </summary>
         </member>
         <member name="T:ObviousPDF.PdfDocumentPart">
              <summary>

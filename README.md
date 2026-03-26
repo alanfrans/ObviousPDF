@@ -55,6 +55,7 @@ doc.Save("output.pdf");
 **Free** for individuals and organizations with fewer than 10 employees.
 
 **$100/year** for organizations with 10+ employees (unlimited developers).
+Get your enterprise license at [enterprise.obviouspdf.com](https://enterprise.obviouspdf.com) or email [license@obviouspdf.com](mailto:license@obviouspdf.com) for inquiries.
 
 See [LICENSE](https://obviouspdf.com/license.html) for full details.
 
