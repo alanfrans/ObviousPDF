@@ -697,20 +697,24 @@ Static utility for WCAG contrast checking.
 
 ## Security
 
-### PdfDigitalSignature
+## PdfDigitalSignature
+
+PKCS#7/CMS digital signature configuration. Requires an `X509Certificate2` with an exportable
+private key (.pfx/.p12). See the [Certificate Setup Guide](examples/digital-signatures.html#certificate-setup)
+for instructions on creating a self-signed certificate or obtaining one from a trusted CA.
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `Certificate` | `X509Certificate2` | (required) | Signing certificate with private key. |
-| `Reason` | `string?` | `null` | Reason for signing. |
-| `Location` | `string?` | `null` | Signing location. |
-| `ContactInfo` | `string?` | `null` | Signer contact info. |
-| `SignerName` | `string?` | `null` | Signer name (defaults to cert CN). |
-| `PageIndex` | `int` | `0` | Page for signature field. |
-| `X`, `Y` | `double` | `0` | Signature field position. |
-| `Width` | `double` | `200` | Signature field width. |
-| `Height` | `double` | `50` | Signature field height. |
-| `FieldName` | `string` | `"Signature1"` | Signature field name. |
+| `Certificate` | `X509Certificate2` | (required) | Signing certificate with exportable private key. Load from a .pfx/.p12 file or the Windows certificate store. |
+| `Reason` | `string?` | `null` | Reason for signing (e.g. "I approve this document"). |
+| `Location` | `string?` | `null` | Geographic location where the document was signed. |
+| `ContactInfo` | `string?` | `null` | Signer contact info (e.g. email address). |
+| `SignerName` | `string?` | `null` | Signer display name. Defaults to the certificate CN when `null`. |
+| `FieldName` | `string` | `"Signature1"` | Name of the signature field in the AcroForm. Must be unique within the document. |
+| `PageIndex` | `int` | `0` | Zero-based page index for the signature field. |
+| `X`, `Y` | `double` | `0` | Signature field position in points (lower-left origin). |
+| `Width` | `double` | `200` | Signature field width in points. |
+| `Height` | `double` | `50` | Signature field height in points. |
 
 ### PdfEncryption
 
