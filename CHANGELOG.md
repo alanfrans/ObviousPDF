@@ -5,6 +5,61 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.1.0] — 2026-04-03
+
+### Added
+
+- **PDF Document Manipulation** — `Merge`, `Split`, `InsertPages`, `RemovePage`, `MovePage` on `PdfDocument` with full tagged PDF/PDF/UA accessibility preservation (ISO 32000-2 §14.8, ISO 14289-1 §7.1).
+- **`PdfPageRange` struct** — Represents a contiguous page range for use with `Split`.
+- **`PdfDocument.PageCount`** — New property returning the number of pages.
+
+---
+
+## [1.0.6] — 2026-04-03
+
+### Added
+
+- **Expanded Accessibility Checker** — Enhanced PDF/UA-1 and PDF/UA-2 compliance validation with additional checks for obscure accessibility requirements and Matterhorn Protocol 1.1 alignment.
+- **ObviousPDF.Json Project** — JSON-to-PDF rendering pipeline with schema-driven validation, automatic structure tagging, and XML/CSV merge components for data-driven generation.
+
+### Fixed
+
+- Accessibility issue detection for WCAG 2.2 compatibility with improved diagnostics.
+
+---
+
+## [1.0.5] — 2026-03-26
+
+### Added
+
+- **Signature Certificate Details** — Enhanced digital signature support with improved certificate information capture and display.
+
+### Fixed
+
+- Signature feature issue preventing proper certificate embedding.
+- Updated API reference with signature certificate details.
+
+---
+
+## [1.0.4] — 2026-03-23
+
+### Added
+
+- **JSON-to-PDF Renderer** — Initial release of ObviousPDF.Json component with schema validation and full PDF/UA-1 support.
+
+### Fixed
+
+- Encryption issues (AES-128 and AES-256 edge cases).
+- Font embedding refinements for better compatibility.
+- Text rotation implementation consistency across all text methods.
+- Licensing reference updates to enterprise.obviouspdf.com.
+
+### Changed
+
+- Deployed build optimizations for both .NET 8 and .NET 6 targets.
+
+---
+
 ## [1.0.3] — 2025-07-13
 
 ### Added

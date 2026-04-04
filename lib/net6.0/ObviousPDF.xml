@@ -162,6 +162,14 @@
         <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CountElementLanguages(ObviousPDF.Accessibility.PdfStructureElement,System.Int32@)">
             <summary>
             Recursively counts non-root structure elements that have a Language set.
+            Also validates BCP 47 format on each language override.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.IsValidBcp47Tag(System.String)">
+            <summary>
+            Validates whether a string is a valid BCP 47 language tag per RFC 5646.
+            Checks the format: primary language subtag (2-3 alpha) followed by
+            optional subtags separated by hyphens.
             </summary>
         </member>
         <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckDefinitionListStructure(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
@@ -201,11 +209,50 @@
             marking to encourage its use for page numbers, headers/footers, etc.
             </summary>
         </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckArtifactedTextInPageBody(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+             <summary>
+             PAC quality warning: text in the page body that is marked as an artifact
+             is often a sign that meaningful labels or instructions have been hidden
+             from assistive technologies.
+            
+             <para>
+             Currently flagged:
+             <list type="number">
+             <item><description>
+             <b>Layout text artifacts</b> — text with <c>/Type /Layout</c> is suspicious
+             because the Layout artifact type is intended for decorative visual elements
+             (ruling lines, background colours), not readable text. PAC reports these as
+             "The page body contains marked content that contains text and is tagged as
+             an artifact."
+             </description></item>
+             </list>
+             Pagination artifacts (page numbers, headers, footers) are not flagged because
+             they are legitimate page furniture per ISO 32000 §14.8.2.2.
+             </para>
+             </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.IsArtifactedTextInPageBody(ObviousPDF.ArtifactTextEntry)">
+            <summary>
+            Returns <see langword="true"/> if the artifact text entry is likely to be
+            flagged by PAC as "artifacted content on page body":
+            <list type="bullet">
+            <item>Layout-type text artifacts (text should not use the Layout artifact type).</item>
+            </list>
+            </summary>
+        </member>
         <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckFormFieldAccessibility(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
             <summary>
             PDF/UA §7.18, WCAG 2.2 SC 4.1.2: Every form field should have an
             accessible name (/TU tooltip) and be connected to a /Form structure
             element via OBJR.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckFormStructurePlacement(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            ISO 32000-2 Annex L and PDF/UA require /Form structure elements to be
+            nested in semantically appropriate context. A /Form element directly
+            under the /Document root is flagged by PAC as a parsing warning
+            ("Possibly inappropriate use of a Form structure element").
             </summary>
         </member>
         <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckFontEmbedding(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
@@ -429,6 +476,86 @@
             <summary>
             Recursively collects custom type names that have no entry in the
             document's role-mapping dictionary.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckListStructure(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            ISO 14289-1 §7.6, Matterhorn 16-001 to 16-003: List structures shall
+            follow the hierarchy L → LI → (Lbl + LBody). Validates:
+            <list type="bullet">
+            <item>/L elements must have at least one /LI child</item>
+            <item>/LI elements must have at least /LBody; /Lbl is optional</item>
+            <item>/Lbl and /LBody must not appear outside /LI</item>
+            </list>
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckDocumentOutline(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            Matterhorn 27-001, WCAG 2.2 SC 2.4.5: When a document has heading
+            structure elements and multiple logical sections, an outline (bookmarks)
+            should be present. If outline items exist, their titles should be non-empty.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckTableCaptions(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            Matterhorn 15-005, ISO 14289-1 §7.5: Data tables benefit from a
+            /Caption child element so screen readers can announce the table's purpose.
+            Advisory: flags tables with more than 2 rows that lack a Caption child.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckTableSpanAttributes(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            Matterhorn 15-006/007, ISO 32000 §14.8.4.8: RowSpan and ColSpan layout
+            attributes on TH/TD cells must be within valid bounds for the table.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckPuaCodepoints(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            Matterhorn 10-001, ISO 14289-1 §7.21.4: Characters mapped to Unicode
+            Private Use Area codepoints (U+E000–U+F8FF, U+F0000–U+FFFFD,
+            U+100000–U+10FFFD) shall have /ActualText set on the containing
+            structure element so assistive technology can provide correct text.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckFullAnnexLNesting(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            ISO 32000-2 Annex L, ISO 14289-2 §8.2.4: Validates block/inline
+            nesting rules beyond Ruby/Warichu/TOCI. Checks:
+            <list type="bullet">
+            <item>P and heading elements cannot contain block-level children</item>
+            <item>Span cannot contain block-level elements</item>
+            <item>Lbl and LBody only inside LI</item>
+            <item>Caption must be first or last child of its parent</item>
+            </list>
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckActualTextPlacement(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            Matterhorn 09-003, ISO 32000 §14.9.4: /ActualText on container elements
+            (Sect, Div, Part, Art) overrides all descendant content — this is rarely
+            correct and can suppress reading order. Warns if ActualText is set on
+            grouping elements that have children.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckAccessibilityPermissions(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            Matterhorn 26-001/002, ISO 32000 §7.6.4: If the document is encrypted,
+            the accessibility permission flags must allow content extraction for
+            assistive technology.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckDecorativeFigureConsistency(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            Matterhorn 13-003, ISO 14289-1 §7.3: A /Figure element with empty
+            or whitespace-only AltText is flagged — decorative images should be
+            artifacts, not Figure structure elements.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.CheckOcgDefaultVisibility(ObviousPDF.PdfDocument,ObviousPDF.Accessibility.PdfAccessibilityReport)">
+            <summary>
+            Matterhorn 20-002, ISO 32000 §8.11.4: When an OCG has a default OFF
+            state, content associated with it may be invisible to users even though
+            the structure tree references it.
             </summary>
         </member>
         <member name="T:ObviousPDF.Accessibility.PdfAccessibilityReport">
@@ -898,6 +1025,20 @@
             Only meaningful for TH elements.
             </summary>
         </member>
+        <member name="P:ObviousPDF.Accessibility.PdfStructureElement.RowSpan">
+            <summary>
+            The number of rows spanned by this table cell (§14.8.4.8, Table 384).
+            Default is 1. Only meaningful for TH and TD elements.
+            Serialized as the <c>/RowSpan</c> attribute with <c>/O /Table</c>.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.PdfStructureElement.ColSpan">
+            <summary>
+            The number of columns spanned by this table cell (§14.8.4.8, Table 384).
+            Default is 1. Only meaningful for TH and TD elements.
+            Serialized as the <c>/ColSpan</c> attribute with <c>/O /Table</c>.
+            </summary>
+        </member>
         <member name="P:ObviousPDF.Accessibility.PdfStructureElement.Expansion">
             <summary>
             The expanded form of an abbreviation or acronym (ISO 32000 §14.9.5).
@@ -1341,6 +1482,16 @@
             (depth-first, children in list order). This is the order in which
             assistive technology will present the content.
             </summary>
+        </member>
+        <member name="M:ObviousPDF.Accessibility.PdfStructureElement.AttachExistingChild(ObviousPDF.Accessibility.PdfStructureElement)">
+            <summary>
+            Attaches an existing structure element as a child of this element,
+            detaching it from its current parent (if any). Used during document
+            merge, split, and page insertion to transfer structure tree nodes
+            between documents while preserving accessibility (ISO 32000-2 §14.8.4).
+            </summary>
+            <param name="child">The element to attach.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="child"/> is null.</exception>
         </member>
         <member name="T:ObviousPDF.Accessibility.PdfTableScope">
             <summary>
@@ -1931,6 +2082,11 @@
         <member name="M:ObviousPDF.Content.ContentStreamBuilder.BeginArtifact(System.String)">
             <summary>
             Begins an artifact marked-content sequence with a type specification.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Content.ContentStreamBuilder.BeginArtifact(System.String,System.String)">
+            <summary>
+            Begins an artifact marked-content sequence with type and subtype.
             </summary>
         </member>
         <member name="M:ObviousPDF.Content.ContentStreamBuilder.EndMarkedContent">
@@ -4643,6 +4799,108 @@
             falling back to the full subject if CN is not available.
             </summary>
         </member>
+        <member name="P:ObviousPDF.PdfDocument.PageCount">
+            <summary>
+            Gets the number of pages in this document.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.PdfDocument.RemovePage(System.Int32)">
+            <summary>
+            Removes the page at <paramref name="pageIndex"/> from the document.
+            Content items whose marked content was exclusively on that page are
+            detached from the structure tree; container ancestors that become
+            empty are pruned bottom-up so the tagged structure remains valid
+            (ISO 32000-2 §14.8, ISO 14289-1 §7.1, Matterhorn 01-003).
+            </summary>
+            <param name="pageIndex">Zero-based index of the page to remove.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="pageIndex"/> is negative or ≥ <see cref="P:ObviousPDF.PdfDocument.PageCount"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            The document contains only one page.
+            </exception>
+        </member>
+        <member name="M:ObviousPDF.PdfDocument.MovePage(System.Int32,System.Int32)">
+            <summary>
+            Moves the page at <paramref name="fromIndex"/> to <paramref name="toIndex"/>,
+            shifting intermediate pages to fill the gap.
+            <para>
+            The structure tree is not modified; the parent tree (§14.7.5.4) is rebuilt
+            at serialization time from the updated page order, so tagged content remains
+            correctly associated after the move.
+            </para>
+            </summary>
+            <param name="fromIndex">Zero-based source page index.</param>
+            <param name="toIndex">Zero-based destination page index.</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            Either index is negative or ≥ <see cref="P:ObviousPDF.PdfDocument.PageCount"/>.
+            </exception>
+        </member>
+        <member name="M:ObviousPDF.PdfDocument.InsertPages(ObviousPDF.PdfDocument,System.Int32)">
+            <summary>
+            Inserts all pages from <paramref name="source"/> into this document at
+            <paramref name="atIndex"/>, consuming the source document.
+            <para>
+            When both documents are tagged, the source document's structure tree
+            children are grafted under a new <c>/Part</c> element appended to this
+            document's <c>/Document</c> root, preserving accessibility hierarchy
+            (ISO 32000-2 §14.8.4, ISO 14289-1 §7.1). Role mappings from the source
+            document are merged into this document's role map.
+            </para>
+            </summary>
+            <param name="source">
+            The document whose pages to insert. After this call the source document
+            should not be used further.
+            </param>
+            <param name="atIndex">
+            Zero-based index at which to insert the first source page.
+            Pass <c>0</c> to prepend before all existing pages;
+            pass <see cref="P:ObviousPDF.PdfDocument.PageCount"/> to append after all existing pages.
+            </param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="atIndex"/> is out of range.</exception>
+        </member>
+        <member name="M:ObviousPDF.PdfDocument.Merge(System.Collections.Generic.IEnumerable{ObviousPDF.PdfDocument})">
+            <summary>
+            Creates a new document that is the merge of all <paramref name="sources"/>,
+            consuming each source document.
+            <para>
+            Pages are appended in the order the sources appear in the sequence.
+            When a source document is tagged, its structure tree children are grafted
+            under a new <c>/Part</c> element in the merged document's <c>/Document</c>
+            root, preserving per-source accessibility hierarchy
+            (ISO 32000-2 §14.8.4, ISO 14289-1 §7.1).
+            </para>
+            </summary>
+            <param name="sources">The documents to merge, in order.</param>
+            <returns>A new <see cref="T:ObviousPDF.PdfDocument"/> containing all pages.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="sources"/> is null.</exception>
+        </member>
+        <member name="M:ObviousPDF.PdfDocument.Split(System.Collections.Generic.IEnumerable{ObviousPDF.PdfPageRange})">
+            <summary>
+            Splits this document into one new document per page range, moving the
+            specified pages (and their tagged structure tree nodes) out of this
+            document into the returned documents.
+            <para>
+            Container structure elements whose entire subtree resides on the target
+            pages are transferred intact; mixed containers (with children on both
+            target and non-target pages) are replicated with the relevant subtree so
+            that accessibility is retained in every resulting document
+            (ISO 32000-2 §14.8, ISO 14289-1 §7.1).
+            Pages not covered by any range remain in this document.
+            </para>
+            </summary>
+            <param name="ranges">
+            The page ranges to extract, each becoming one new document.
+            Ranges must be non-overlapping and within [0, <see cref="P:ObviousPDF.PdfDocument.PageCount"/>).
+            </param>
+            <returns>
+            A list of new documents in the same order as <paramref name="ranges"/>.
+            Pages not covered by any range remain in this document.
+            </returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="ranges"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">Ranges overlap or extend beyond the document.</exception>
+        </member>
         <member name="T:ObviousPDF.PdfDocumentInfo">
             <summary>
             Document metadata properties corresponding to the Info dictionary (ISO 32000 §14.3.3).
@@ -5526,6 +5784,13 @@
             Gets whether this page contains artifact-marked content.
             </summary>
         </member>
+        <member name="P:ObviousPDF.PdfPageBuilder.ArtifactTextObjectCount">
+            <summary>
+            Gets the number of text objects written while inside artifact-marked
+            content sequences. PAC reports these as a quality warning when such
+            text appears in the page body.
+            </summary>
+        </member>
         <member name="P:ObviousPDF.PdfPageBuilder.HasUntaggedContent">
             <summary>
             Gets whether this page has content that is neither tagged nor marked
@@ -6325,7 +6590,7 @@
             Ends an artifact sequence.
             </summary>
         </member>
-        <member name="M:ObviousPDF.PdfPageBuilder.AddArtifactText(System.String,System.Double,System.Double,System.Nullable{ObviousPDF.Accessibility.PdfArtifactType},ObviousPDF.PdfTextOptions)">
+        <member name="M:ObviousPDF.PdfPageBuilder.AddArtifactText(System.String,System.Double,System.Double,System.Nullable{ObviousPDF.Accessibility.PdfArtifactType},ObviousPDF.PdfTextOptions,System.String)">
             <summary>
             Adds text that is marked as an artifact — decorative or
             supplementary content that should be ignored by assistive
@@ -6538,6 +6803,43 @@
             <summary>
             No numbering; only the prefix (if any) is used as the page label.
             </summary>
+        </member>
+        <member name="T:ObviousPDF.PdfPageRange">
+            <summary>
+            Represents a contiguous range of zero-based page indices within a PDF document.
+            Used with <see cref="M:ObviousPDF.PdfDocument.Split(System.Collections.Generic.IEnumerable{ObviousPDF.PdfPageRange})"/> to specify which pages to extract
+            into each new document.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.PdfPageRange.StartIndex">
+            <summary>Gets the zero-based index of the first page in the range.</summary>
+        </member>
+        <member name="P:ObviousPDF.PdfPageRange.Count">
+            <summary>Gets the number of pages in the range.</summary>
+        </member>
+        <member name="P:ObviousPDF.PdfPageRange.EndIndexExclusive">
+            <summary>Gets the exclusive end index (StartIndex + Count).</summary>
+        </member>
+        <member name="M:ObviousPDF.PdfPageRange.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Initializes a new <see cref="T:ObviousPDF.PdfPageRange"/> with a start index and page count.
+            </summary>
+            <param name="startIndex">Zero-based index of the first page.</param>
+            <param name="count">Number of pages in the range (must be ≥ 1).</param>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="startIndex"/> is negative, or <paramref name="count"/> is less than 1.
+            </exception>
+        </member>
+        <member name="M:ObviousPDF.PdfPageRange.FromStartEnd(System.Int32,System.Int32)">
+            <summary>
+            Creates a <see cref="T:ObviousPDF.PdfPageRange"/> from an inclusive start and end index.
+            </summary>
+            <param name="startIndex">Zero-based index of the first page (inclusive).</param>
+            <param name="endIndexInclusive">Zero-based index of the last page (inclusive).</param>
+            <returns>A range covering pages from <paramref name="startIndex"/> to <paramref name="endIndexInclusive"/>.</returns>
+            <exception cref="T:System.ArgumentOutOfRangeException">
+            <paramref name="endIndexInclusive"/> is less than <paramref name="startIndex"/>.
+            </exception>
         </member>
         <member name="T:ObviousPDF.PdfPathBuilder">
             <summary>
