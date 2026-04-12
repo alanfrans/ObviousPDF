@@ -1,0 +1,789 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ObviousPDF.Json</name>
+    </assembly>
+    <members>
+        <member name="T:ObviousPDF.Json.JsonModelMapper">
+            <summary>
+            Maps JSON string values to ObviousPDF enum types and converts
+            JSON model objects to their ObviousPDF API equivalents.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.JsonModelMapper.MapTextOptions(ObviousPDF.Json.Models.JsonPdfTextOptions,System.Collections.Generic.IReadOnlyDictionary{System.String,ObviousPDF.Json.ResolvedFont})">
+            <summary>
+            Converts JSON text options to ObviousPDF <see cref="T:ObviousPDF.PdfTextOptions"/>,
+            resolving font references from the provided lookup.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.JsonModelMapper.MapDrawOptions(ObviousPDF.Json.Models.JsonPdfDrawOptions)">
+            <summary>
+            Converts JSON draw options to ObviousPDF <see cref="T:ObviousPDF.PdfDrawOptions"/>.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.ResolvedFont">
+            <summary>
+            A resolved font that can be either a standard font or an embedded font.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonLinkElement">
+            <summary>URI hyperlink annotation.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonTextAnnotationElement">
+            <summary>Sticky note annotation.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonFreeTextAnnotationElement">
+            <summary>Inline text annotation.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonMarkupAnnotationElement">
+            <summary>Markup annotation (highlight, underline, squiggly, strikeOut).</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonStampAnnotationElement">
+            <summary>Stamp annotation.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonTransformElement">
+            <summary>Applies a graphics-state transform to nested content.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonClipElement">
+            <summary>Clips nested content to a shape.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonLayerElement">
+            <summary>Wraps content in an optional content group (layer).</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonShadingElement">
+            <summary>Gradient fill element.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonTilingPatternElement">
+            <summary>Tiling pattern fill element.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonAlphaElement">
+            <summary>Sets opacity for a block of content.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonFormXObjectPlacement">
+            <summary>Places a declared FormXObject on the page.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonFormFieldElement">
+            <summary>Base properties shared by all form field elements.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonFormFieldElement.Tooltip">
+            <summary>
+            Tooltip / alternate field name (/TU key). Announced by screen readers and required for PDF/UA compliance.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonTextFieldElement">
+            <summary>Text input form field.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonCheckboxFieldElement">
+            <summary>Checkbox form field.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonDropdownFieldElement">
+            <summary>Dropdown (combo box) form field.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonListBoxFieldElement">
+            <summary>List box form field.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPushButtonFieldElement">
+            <summary>Push button form field.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonSignatureFieldElement">
+            <summary>Signature placeholder form field.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonTextElement">
+            <summary>Single line of text at a point.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonTextBlockElement">
+            <summary>Multi-line text block.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonImageElement">
+            <summary>Image placement.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonImageElement.AltText">
+            <summary>
+            Alternative text for the image. Used as <c>/Alt</c> on the
+            <c>/Figure</c> structure element when the image is tagged.
+            Required by PDF/UA (ISO 14289-1 §7.3, Matterhorn 13-004).
+            In accessible mode this enables automatic Figure tagging.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonLineElement">
+            <summary>Line between two points.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonRectangleElement">
+            <summary>Rectangle (draw, fill, or drawAndFill).</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonCircleElement">
+            <summary>Circle (draw, fill, or drawAndFill).</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonEllipseElement">
+            <summary>Ellipse (draw, fill, or drawAndFill).</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPolygonElement">
+            <summary>Polygon (draw, fill, or drawAndFill).</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPathElement">
+            <summary>Low-level Bézier path.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPathOperation">
+            <summary>A single path operation (moveTo, lineTo, curveTo, closePath).</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonContentElement">
+            <summary>
+            Base class for all content elements. Discriminated by the <c>type</c> field.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonContentElement.Type">
+            <summary>
+            The element type discriminator string.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonContentElement.StructureId">
+            <summary>
+            Links this content to a structure element for tagged PDF.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonContentElement.Artifact">
+            <summary>
+            When true, marks this content as a PDF artifact (non-structural).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonContentElement.ArtifactType">
+            <summary>
+            The artifact type (pagination, layout, page, background).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonContentElement.ArtifactSubtype">
+            <summary>
+            Optional artifact subtype, typically Header or Footer for pagination artifacts.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonContentElement.StructureTag">
+            <summary>
+            Overrides the default structure type used in accessible (auto-tag) mode.
+            For example, set to <c>"H2"</c> to tag a text element as a second-level
+            heading instead of the default <c>/P</c>. Values must match a standard
+            structure type name (e.g. <c>"H1"</c>–<c>"H6"</c>, <c>"Span"</c>,
+            <c>"BlockQuote"</c>). Ignored when <c>artifact</c> is <c>true</c> or
+            when <c>structureId</c> is set.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonContentElementConverter">
+            <summary>
+            Polymorphic JSON converter for <see cref="T:ObviousPDF.Json.Models.JsonContentElement"/> using
+            the <c>type</c> field as discriminator.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonDocument">
+            <summary>
+            Top-level JSON document model that drives the ObviousPDF rendering pipeline.
+            Corresponds to the root object in the ObviousPDF JSON Schema.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.CoordinateOrigin">
+            <summary>
+            Coordinate origin mode. Default is bottom-left (PDF native).
+            When set to "topLeft", Y coordinates are transformed before rendering.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Tagged">
+            <summary>
+            Whether to enable tagged PDF for accessibility.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Accessible">
+            <summary>
+            Shorthand to enable full PDF/UA accessibility. When <c>true</c>,
+            <see cref="P:ObviousPDF.Json.Models.JsonDocument.Tagged"/> is implicitly enabled, the document language
+            and title are required, <c>DisplayDocTitle</c> is set, PDF/UA-1
+            conformance is declared, and all content elements that do not have
+            an explicit <c>structureId</c> or <c>artifact</c> flag are
+            automatically tagged with appropriate structure types (P for text,
+            Figure for images). Standard fonts are auto-upgraded to embedded
+            bundled substitutes.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.GenerateAccessibilityReport">
+            <summary>
+            When set to <c>true</c>, an internal accessibility report is generated
+            after building the PDF. The report is returned via
+            <see cref="P:ObviousPDF.PdfDocument.LastAccessibilityReport"/> or the
+            <c>PdfJsonRenderResult</c>.
+            <para>
+            <strong>Disclaimer:</strong> This automated report is provided solely to
+            assist in the assessment of document accessibility. It is not a comprehensive
+            accessibility audit. To confirm that WCAG or PDF/UA standards are fully met,
+            human assessment by an accessibility specialist is recommended.
+            </para>
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Document">
+            <summary>
+            Document-level settings (metadata, conformance, encryption, signature).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Fonts">
+            <summary>
+            Font library — all non-standard fonts must be declared here before use.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Images">
+            <summary>
+            Image library — images declared here can be referenced by id.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.FormXObjects">
+            <summary>
+            Reusable form XObject definitions.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Layers">
+            <summary>
+            Optional content group (layer) definitions.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Shadings">
+            <summary>
+            Shading pattern definitions for gradient fills.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Patterns">
+            <summary>
+            Tiling pattern definitions.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Attachments">
+            <summary>
+            Document-level file attachments.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Outlines">
+            <summary>
+            Bookmark/outline entries.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.PageLabels">
+            <summary>
+            Page label range definitions.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.StructureTree">
+            <summary>
+            Structure tree for tagged PDF. Root must have type "Document".
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.RoleMappings">
+            <summary>
+            Custom-to-standard structure type role mappings.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonDocument.Pages">
+            <summary>
+            The pages of the document. Required; at least one page.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonDocumentSettings">
+            <summary>
+            Document-level settings: metadata, conformance, encryption, signature.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonDocumentInfo">
+            <summary>
+            Document metadata (Info dictionary).
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonConformance">
+            <summary>
+            PDF/A and PDF/UA conformance settings.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonEncryptionSettings">
+            <summary>
+            Encryption settings for the PDF.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonSignatureSettings">
+            <summary>
+            Digital signature settings.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonFontEntry">
+            <summary>
+            A font declaration in the document-level font library.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonImageEntry">
+            <summary>
+            An image declaration in the document-level image library.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonInlineImageSource">
+            <summary>
+            An inline image source on a content element.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonFormXObjectEntry">
+            <summary>
+            A reusable FormXObject definition.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonLayerEntry">
+            <summary>
+            An optional content group (layer) definition.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonShadingEntry">
+            <summary>
+            A shading pattern (gradient) definition.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonColorStop">
+            <summary>
+            A color stop in a gradient definition.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonTilingPatternEntry">
+            <summary>
+            A tiling pattern definition.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonAttachmentEntry">
+            <summary>
+            A file attachment declaration.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonOutlineEntry">
+            <summary>
+            A bookmark/outline entry with optional children.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPageLabelEntry">
+            <summary>
+            A page label range definition.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonRoleMappingEntry">
+            <summary>
+            A custom-to-standard structure type role mapping.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPdfTextOptions">
+            <summary>
+            JSON representation of text rendering options.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPdfDrawOptions">
+            <summary>
+            JSON representation of drawing/stroke options.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPageDefinition">
+            <summary>
+            A page in the JSON document.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPageDefinition.Size">
+            <summary>
+            Named page size (Letter, Legal, A4, A3, A5, Tabloid).
+            Overrides width/height when set.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPageDefinition.Width">
+            <summary>
+            Page width in points. Used when <see cref="P:ObviousPDF.Json.Models.JsonPageDefinition.Size"/> is not set.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPageDefinition.Height">
+            <summary>
+            Page height in points. Used when <see cref="P:ObviousPDF.Json.Models.JsonPageDefinition.Size"/> is not set.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPageDefinition.CoordinateOrigin">
+            <summary>
+            Coordinate origin override for this page only.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPageDefinition.Content">
+            <summary>
+            Ordered array of content elements to render on this page.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.Models.JsonPageDefinition.GetDimensions">
+            <summary>
+            Resolves the page dimensions in points based on <see cref="P:ObviousPDF.Json.Models.JsonPageDefinition.Size"/> or explicit width/height.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPdfColor">
+            <summary>
+            Represents a PDF color in JSON. Can be an RGB object, grayscale object,
+            CMYK object, or a named color string.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.Named">
+            <summary>Named color string (black, white, red, green, blue), or null if using components.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.R">
+            <summary>Red component (0.0–1.0) for RGB.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.G">
+            <summary>Green component (0.0–1.0) for RGB.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.B">
+            <summary>Blue component (0.0–1.0) for RGB.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.Gray">
+            <summary>Grayscale component (0.0–1.0).</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.C">
+            <summary>Cyan component (0.0–1.0) for CMYK.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.M">
+            <summary>Magenta component (0.0–1.0) for CMYK.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.Y">
+            <summary>Yellow component (0.0–1.0) for CMYK.</summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonPdfColor.K">
+            <summary>Key (black) component (0.0–1.0) for CMYK.</summary>
+        </member>
+        <member name="M:ObviousPDF.Json.Models.JsonPdfColor.ToPdfColor">
+            <summary>
+            Converts this JSON color model to the ObviousPDF <see cref="T:ObviousPDF.PdfColor"/> type.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonPdfColorConverter">
+            <summary>
+            Custom JSON converter for <see cref="T:ObviousPDF.Json.Models.JsonPdfColor"/> that handles
+            both string (named) and object (RGB/gray/CMYK) representations.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.Models.JsonStructureElement">
+            <summary>
+            A node in the tagged PDF structure tree.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Type">
+            <summary>
+            Structure type (Document, P, H1, Table, etc.).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.CustomType">
+            <summary>
+            Custom type name for role-mapped types.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Id">
+            <summary>
+            Unique ID for header associations (TH/TD linking).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.AltText">
+            <summary>
+            Alternative text (required for Figure elements).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.ActualText">
+            <summary>
+            Actual replacement text.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Language">
+            <summary>
+            BCP 47 language override for this subtree.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Title">
+            <summary>
+            Element title.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Phoneme">
+            <summary>
+            Phonemic transcription (PDF 2.0).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.PhoneticAlphabet">
+            <summary>
+            Phonetic alphabet (ipa or xSampa).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Scope">
+            <summary>
+            Table header scope (row, column, both). TH only.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Short">
+            <summary>
+            Abbreviated header text. TH only.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Expansion">
+            <summary>
+            Expanded abbreviation text.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.NoteType">
+            <summary>
+            Note type (footnote, endnote, rearnote). Note only.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.LayerRef">
+            <summary>
+            Layer reference id.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.AssociatedFileRef">
+            <summary>
+            Associated file reference id.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.DestinationPageIndex">
+            <summary>
+            Destination page index for TOCI elements.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.BBox">
+            <summary>
+            Bounding box [llx, lly, urx, ury] in points.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Headers">
+            <summary>
+            Header IDs for TD cells.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.ContentItems">
+            <summary>
+            Structure IDs of content elements that belong to this element, in reading order.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.Models.JsonStructureElement.Children">
+            <summary>
+            Child structure elements.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonRenderer">
+            <summary>
+            Renders a PDF from a JSON document conforming to the ObviousPDF JSON Schema.
+            Implements the full processing pipeline defined in the requirements.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Json.PdfJsonRenderer.StructureRootKey">
+            <summary>Sentinel key for the structure tree root in the structureMap dictionary.</summary>
+        </member>
+        <member name="F:ObviousPDF.Json.PdfJsonRenderer.AnonFormKey">
+            <summary>Per-page fallback parent key for form fields without an explicit structureId.</summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.Render(System.String,System.String)">
+            <summary>Renders a JSON string to a file.</summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.Render(System.String,System.IO.Stream)">
+            <summary>Renders a JSON string to a stream.</summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.RenderFromFile(System.String,System.String)">
+            <summary>Reads a JSON file and renders the PDF to a file.</summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.RenderToFile(System.String,System.String)">
+            <summary>Renders using instance options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.RenderToStream(System.String,System.IO.Stream)">
+            <summary>Renders using instance options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.BuildDocument(System.String)">
+            <summary>
+            Builds a <see cref="T:ObviousPDF.PdfDocument"/> from JSON without saving it.
+            Useful for inspection, accessibility checking, or further manipulation.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.BuildDocumentFromFile(System.String)">
+            <summary>
+            Reads a JSON file and builds a <see cref="T:ObviousPDF.PdfDocument"/> without saving it.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.RenderWithReport(System.String,System.String)">
+            <summary>
+            Renders a JSON string to a file and returns a <see cref="T:ObviousPDF.Json.PdfJsonRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.RenderWithReport(System.String,System.IO.Stream)">
+            <summary>
+            Renders a JSON string to a stream and returns a <see cref="T:ObviousPDF.Json.PdfJsonRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.RenderToFileWithReport(System.String,System.String)">
+            <summary>
+            Renders using instance options and returns a <see cref="T:ObviousPDF.Json.PdfJsonRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.RenderToStreamWithReport(System.String,System.IO.Stream)">
+            <summary>
+            Renders using instance options and returns a <see cref="T:ObviousPDF.Json.PdfJsonRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.AddFormFieldToPage(ObviousPDF.PdfPageBuilder,ObviousPDF.PdfAcroField,System.String,System.Collections.Generic.Dictionary{System.String,ObviousPDF.Accessibility.PdfStructureElement})">
+            <summary>
+            Adds a form field to the page. When the document is tagged, creates a /Form
+            structure element and uses AddTaggedAcroField for PDF/UA §7.18 compliance.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonRenderer.BuildStructureMap(ObviousPDF.Accessibility.PdfStructureElement,ObviousPDF.Json.Models.JsonStructureElement,System.Collections.Generic.Dictionary{System.String,ObviousPDF.Accessibility.PdfStructureElement},System.Int32)">
+            <summary>
+            Builds a parallel structure tree in PdfStructureElement space and maps
+            structureId → PdfStructureElement. The root was already created by
+            EnableTaggedPdf(), so we create children recursively.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonRenderException">
+            <summary>
+            Exception thrown when rendering fails.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonRendererOptions">
+            <summary>
+            Configuration options for the JSON-to-PDF renderer.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonRendererOptions.BasePath">
+            <summary>
+            Base directory for resolving relative file paths in font, image, and attachment entries.
+            Defaults to the current working directory.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonRendererOptions.ImageFetchTimeoutSeconds">
+            <summary>
+            Timeout in seconds for fetching URL-based images. Default: 10.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonRendererOptions.MaxRedirects">
+            <summary>
+            Maximum number of HTTP redirects to follow for URL images. Default: 3.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonRendererOptions.AllowInsecureImageUrls">
+            <summary>
+            When true, skips SSL certificate validation for URL images. Default: false.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonRendererOptions.GenerateAccessibilityReport">
+            <summary>
+            When set to <c>true</c>, an internal accessibility report is generated
+            after building the PDF document. The report is available via
+            <see cref="P:ObviousPDF.Json.PdfJsonRenderResult.AccessibilityReport"/> when using
+            <see cref="M:ObviousPDF.Json.PdfJsonRenderer.RenderWithReport(System.String,System.String)"/> or
+            via <see cref="P:ObviousPDF.PdfDocument.LastAccessibilityReport"/> when using
+            <see cref="M:ObviousPDF.Json.PdfJsonRenderer.BuildDocument(System.String)"/>.
+            <para>
+            <strong>Disclaimer:</strong> This automated report is provided solely to
+            assist in the assessment of document accessibility. It is not a comprehensive
+            accessibility audit. To confirm that WCAG or PDF/UA standards are fully met,
+            human assessment by an accessibility specialist is recommended.
+            </para>
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonRenderResult">
+            <summary>
+            Contains the output of a JSON-to-PDF render operation, including an
+            optional accessibility report when
+            <see cref="P:ObviousPDF.Json.PdfJsonRendererOptions.GenerateAccessibilityReport"/> or the
+            JSON <c>"generateAccessibilityReport"</c> property is enabled.
+            </summary>
+            <remarks>
+            <strong>Disclaimer:</strong> The accessibility report included in this result
+            is provided solely to assist in the assessment of document accessibility. It
+            is not a comprehensive accessibility audit. To confirm that WCAG or PDF/UA
+            standards are fully met, human assessment by an accessibility specialist is
+            recommended.
+            </remarks>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonRenderResult.AccessibilityReport">
+            <summary>
+            The accessibility report generated during rendering, or <c>null</c>
+            if report generation was not enabled.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonSerializer">
+            <summary>
+            JSON serialization/deserialization utilities for the ObviousPDF JSON document model.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonSerializer.Deserialize(System.String)">
+            <summary>
+            Deserializes a JSON string into a <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> model.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonSerializer.Deserialize(System.IO.Stream)">
+            <summary>
+            Deserializes a JSON stream into a <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> model.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonSerializer.Serialize(ObviousPDF.Json.Models.JsonDocument)">
+            <summary>
+            Serializes a <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> model to a JSON string.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonSerializer.Options">
+            <summary>
+            Returns the shared serializer options.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonValidationResult">
+            <summary>
+            Result of JSON document validation.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonValidationResult.IsValid">
+            <summary>
+            Whether the document passed all validation rules with no errors.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonValidationResult.Errors">
+            <summary>
+            Validation errors (the document cannot be rendered).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Json.PdfJsonValidationResult.Warnings">
+            <summary>
+            Validation warnings (the document can be rendered but may have issues).
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonValidationResult.ToString">
+            <summary>
+            Returns a human-readable summary of all validation issues.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonValidationItem">
+            <summary>
+            A single validation finding.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonValidationSeverity">
+            <summary>
+            Severity of a validation item.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Json.PdfJsonValidationSeverity.Error">
+            <summary>A validation error that must be corrected.</summary>
+        </member>
+        <member name="F:ObviousPDF.Json.PdfJsonValidationSeverity.Warning">
+            <summary>A validation warning that should be reviewed.</summary>
+        </member>
+        <member name="T:ObviousPDF.Json.PdfJsonValidator">
+            <summary>
+            Validates a deserialized <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> against the ObviousPDF JSON Schema
+            cross-field rules (V001–V025).
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonValidator.Validate(System.String)">
+            <summary>
+            Validates the JSON string by deserializing it and running all validation rules.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Json.PdfJsonValidator.Validate(ObviousPDF.Json.Models.JsonDocument)">
+            <summary>
+            Validates a pre-deserialized document model.
+            </summary>
+        </member>
+    </members>
+</doc>

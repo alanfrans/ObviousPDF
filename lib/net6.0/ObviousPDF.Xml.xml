@@ -1,0 +1,235 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ObviousPDF.Xml</name>
+    </assembly>
+    <members>
+        <member name="T:ObviousPDF.Xml.PdfXmlRenderer">
+            <summary>
+            Renders a PDF from an XML document conforming to the ObviousPDF XML Schema.
+            Implements the full processing pipeline defined in the XML requirements.
+            </summary>
+            <remarks>
+            Internally, the XML is deserialized into the shared document model and
+            then processed by the same rendering pipeline as the JSON renderer,
+            ensuring identical behavior across both input formats.
+            </remarks>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.#ctor">
+            <summary>Initializes a new instance with default options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.#ctor(ObviousPDF.Xml.PdfXmlRendererOptions)">
+            <summary>Initializes a new instance with the specified options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.Render(System.String,System.String)">
+            <summary>Renders an XML string to a file.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.Render(System.String,System.IO.Stream)">
+            <summary>Renders an XML string to a stream.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.RenderFromFile(System.String,System.String)">
+            <summary>Reads an XML file and renders the PDF to a file.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.RenderToFile(System.String,System.String)">
+            <summary>Renders using instance options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.RenderToStream(System.String,System.IO.Stream)">
+            <summary>Renders using instance options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.BuildDocument(System.String)">
+            <summary>
+            Builds a <see cref="T:ObviousPDF.PdfDocument"/> from XML without saving it.
+            Useful for inspection, accessibility checking, or further manipulation.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.BuildDocumentFromFile(System.String)">
+            <summary>
+            Reads an XML file and builds a <see cref="T:ObviousPDF.PdfDocument"/> without saving it.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.RenderWithReport(System.String,System.String)">
+            <summary>
+            Renders an XML string to a file and returns a <see cref="T:ObviousPDF.Xml.PdfXmlRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.RenderWithReport(System.String,System.IO.Stream)">
+            <summary>
+            Renders an XML string to a stream and returns a <see cref="T:ObviousPDF.Xml.PdfXmlRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.RenderToFileWithReport(System.String,System.String)">
+            <summary>
+            Renders using instance options and returns a <see cref="T:ObviousPDF.Xml.PdfXmlRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderer.RenderToStreamWithReport(System.String,System.IO.Stream)">
+            <summary>
+            Renders using instance options and returns a <see cref="T:ObviousPDF.Xml.PdfXmlRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Xml.PdfXmlRendererOptions">
+            <summary>
+            Configuration options for the XML-to-PDF renderer.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlRendererOptions.BasePath">
+            <summary>
+            Base directory for resolving relative file paths in font, image, and attachment entries.
+            Defaults to the current working directory.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlRendererOptions.ImageFetchTimeoutSeconds">
+            <summary>
+            Timeout in seconds for fetching URL-based images. Default: 10.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlRendererOptions.MaxRedirects">
+            <summary>
+            Maximum number of HTTP redirects to follow for URL images. Default: 3.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlRendererOptions.AllowInsecureImageUrls">
+            <summary>
+            When true, skips SSL certificate validation for URL images. Default: false.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlRendererOptions.GenerateAccessibilityReport">
+            <summary>
+            When set to <c>true</c>, an internal accessibility report is generated
+            after building the PDF document. The report is available via
+            <see cref="P:ObviousPDF.Xml.PdfXmlRenderResult.AccessibilityReport"/> when using
+            <see cref="M:ObviousPDF.Xml.PdfXmlRenderer.RenderWithReport(System.String,System.String)"/> or
+            via <see cref="P:ObviousPDF.PdfDocument.LastAccessibilityReport"/> when using
+            <see cref="M:ObviousPDF.Xml.PdfXmlRenderer.BuildDocument(System.String)"/>.
+            <para>
+            <strong>Disclaimer:</strong> This automated report is provided solely to
+            assist in the assessment of document accessibility. It is not a comprehensive
+            accessibility audit. To confirm that WCAG or PDF/UA standards are fully met,
+            human assessment by an accessibility specialist is recommended.
+            </para>
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Xml.PdfXmlRenderException">
+            <summary>
+            Exception thrown when XML-to-PDF rendering fails.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlRenderException.ValidationResult">
+            <summary>Gets the validation result that caused the exception, if any.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderException.#ctor(System.String)">
+            <summary>Initializes a new instance with the specified message.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderException.#ctor(System.String,ObviousPDF.Xml.PdfXmlValidationResult)">
+            <summary>Initializes a new instance with a message and the associated validation result.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlRenderException.#ctor(System.String,System.Exception)">
+            <summary>Initializes a new instance with a message and inner exception.</summary>
+        </member>
+        <member name="T:ObviousPDF.Xml.PdfXmlRenderResult">
+            <summary>
+            Contains the output of an XML-to-PDF render operation, including an
+            optional accessibility report when
+            <see cref="P:ObviousPDF.Xml.PdfXmlRendererOptions.GenerateAccessibilityReport"/> or the
+            XML <c>generateAccessibilityReport</c> attribute is enabled.
+            </summary>
+            <remarks>
+            <strong>Disclaimer:</strong> The accessibility report included in this result
+            is provided solely to assist in the assessment of document accessibility. It
+            is not a comprehensive accessibility audit. To confirm that WCAG or PDF/UA
+            standards are fully met, human assessment by an accessibility specialist is
+            recommended.
+            </remarks>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlRenderResult.AccessibilityReport">
+            <summary>
+            The accessibility report generated during rendering, or <c>null</c>
+            if report generation was not enabled.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Xml.PdfXmlSerializer">
+            <summary>
+            Deserializes an ObviousPDF XML document into the shared <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> model.
+            The XML namespace is <c>https://obviouspdf.com/schemas/xml/1.0</c>.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlSerializer.Deserialize(System.String)">
+            <summary>
+            Deserializes an XML string into a <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> model.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlSerializer.Deserialize(System.IO.Stream)">
+            <summary>
+            Deserializes an XML stream into a <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> model.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Xml.PdfXmlValidationResult">
+            <summary>
+            Result of XML document validation.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlValidationResult.IsValid">
+            <summary>
+            Whether the document passed all validation rules with no errors.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlValidationResult.Errors">
+            <summary>
+            Validation errors (the document cannot be rendered).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlValidationResult.Warnings">
+            <summary>
+            Validation warnings (the document can be rendered but may have issues).
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlValidationResult.ToString">
+            <summary>
+            Returns a human-readable summary of all validation issues.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Xml.PdfXmlValidationItem">
+            <summary>
+            A single validation finding.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlValidationItem.RuleId">
+            <summary>Gets the rule identifier (e.g. XV001).</summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlValidationItem.Severity">
+            <summary>Gets the severity of the validation finding.</summary>
+        </member>
+        <member name="P:ObviousPDF.Xml.PdfXmlValidationItem.Message">
+            <summary>Gets the human-readable description of the finding.</summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlValidationItem.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:ObviousPDF.Xml.PdfXmlValidationSeverity">
+            <summary>
+            Severity of a validation item.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Xml.PdfXmlValidationSeverity.Error">
+            <summary>A validation error that must be corrected.</summary>
+        </member>
+        <member name="F:ObviousPDF.Xml.PdfXmlValidationSeverity.Warning">
+            <summary>A validation warning that should be reviewed.</summary>
+        </member>
+        <member name="T:ObviousPDF.Xml.PdfXmlValidator">
+            <summary>
+            Validates an ObviousPDF XML document against the cross-field rules XV001–XV025.
+            Internally deserializes the XML to the shared model and delegates to validation logic.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Xml.PdfXmlValidator.Validate(System.String)">
+            <summary>
+            Validates the XML string by deserializing it and running all validation rules.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -18,6 +18,11 @@
             - ISO 14289-1 (PDF/UA-1) requirements
             - ISO 32000 §14.7, §14.8, §14.9
             - WCAG 2.2 success criteria relevant to PDF
+            
+            <strong>Disclaimer:</strong> This automated checker is provided solely to assist
+            in the assessment of document accessibility. It is not a comprehensive
+            accessibility audit. To confirm that WCAG or PDF/UA standards are fully met,
+            human assessment by an accessibility specialist is recommended.
             </remarks>
         </member>
         <member name="M:ObviousPDF.Accessibility.PdfAccessibilityChecker.Check(ObviousPDF.PdfDocument)">
@@ -563,6 +568,12 @@
             The result of an accessibility check performed by <see cref="T:ObviousPDF.Accessibility.PdfAccessibilityChecker"/>.
             Contains lists of compliant and non-compliant features.
             </summary>
+            <remarks>
+            <strong>Disclaimer:</strong> This automated report is provided solely to assist in
+            the assessment of document accessibility. It is not a comprehensive accessibility
+            audit. To confirm that WCAG or PDF/UA standards are fully met, human assessment
+            by an accessibility specialist is recommended.
+            </remarks>
         </member>
         <member name="P:ObviousPDF.Accessibility.PdfAccessibilityReport.Compliant">
             <summary>
@@ -593,11 +604,31 @@
             <summary>
             A single result from an accessibility check.
             </summary>
+            <param name="Feature">The feature or requirement being checked.</param>
+            <param name="Description">Description of the check result.</param>
+            <param name="Reference">Reference to the specification (e.g. "PDF/UA §7.1").</param>
+            <param name="Remediation">Suggested remediation for non-compliant items, or null if compliant.</param>
         </member>
         <member name="M:ObviousPDF.Accessibility.AccessibilityCheckResult.#ctor(System.String,System.String,System.String,System.String)">
             <summary>
             A single result from an accessibility check.
             </summary>
+            <param name="Feature">The feature or requirement being checked.</param>
+            <param name="Description">Description of the check result.</param>
+            <param name="Reference">Reference to the specification (e.g. "PDF/UA §7.1").</param>
+            <param name="Remediation">Suggested remediation for non-compliant items, or null if compliant.</param>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.AccessibilityCheckResult.Feature">
+            <summary>The feature or requirement being checked.</summary>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.AccessibilityCheckResult.Description">
+            <summary>Description of the check result.</summary>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.AccessibilityCheckResult.Reference">
+            <summary>Reference to the specification (e.g. "PDF/UA §7.1").</summary>
+        </member>
+        <member name="P:ObviousPDF.Accessibility.AccessibilityCheckResult.Remediation">
+            <summary>Suggested remediation for non-compliant items, or null if compliant.</summary>
         </member>
         <member name="T:ObviousPDF.Accessibility.PdfArtifactType">
             <summary>
@@ -1217,7 +1248,7 @@
             <summary>
             Gets the PDF name string used in the <c>/S</c> entry of the structure
             element dictionary. Returns <see cref="P:ObviousPDF.Accessibility.PdfStructureElement.CustomType"/> if set, otherwise
-            the standard <see cref="!:StructureType.ToPdfName"/>.
+            the standard <c>ToPdfName()</c> value.
             </summary>
         </member>
         <member name="M:ObviousPDF.Accessibility.PdfStructureElement.AddChild(ObviousPDF.Accessibility.StructureType)">
@@ -3736,6 +3767,21 @@
             preserving backward compatibility with existing code that uses tuple colours.
             </summary>
         </member>
+        <member name="M:ObviousPDF.PdfColor.Equals(ObviousPDF.PdfColor)">
+            <inheritdoc />
+        </member>
+        <member name="M:ObviousPDF.PdfColor.Equals(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:ObviousPDF.PdfColor.GetHashCode">
+            <inheritdoc />
+        </member>
+        <member name="M:ObviousPDF.PdfColor.op_Equality(ObviousPDF.PdfColor,ObviousPDF.PdfColor)">
+            <summary>Returns <c>true</c> if the two colours are equal.</summary>
+        </member>
+        <member name="M:ObviousPDF.PdfColor.op_Inequality(ObviousPDF.PdfColor,ObviousPDF.PdfColor)">
+            <summary>Returns <c>true</c> if the two colours are not equal.</summary>
+        </member>
         <member name="T:ObviousPDF.PdfColorSpace">
             <summary>
             The PDF device colour spaces (ISO 32000 §8.6.4).
@@ -3903,6 +3949,37 @@
         <member name="P:ObviousPDF.PdfDocument.Info">
             <summary>
             Gets the document metadata (Info dictionary).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.PdfDocument.GenerateAccessibilityReport">
+            <summary>
+            When set to <c>true</c>, an internal accessibility report is generated
+            each time the document is saved via <see cref="M:ObviousPDF.PdfDocument.Save(System.String)"/>,
+            <see cref="M:ObviousPDF.PdfDocument.Save(System.IO.Stream)"/>, <see cref="M:ObviousPDF.PdfDocument.Sign(System.String,ObviousPDF.PdfDigitalSignature)"/>,
+            or <see cref="M:ObviousPDF.PdfDocument.Sign(System.IO.Stream,ObviousPDF.PdfDigitalSignature)"/>. The report is
+            available via <see cref="P:ObviousPDF.PdfDocument.LastAccessibilityReport"/> after saving.
+            <para>
+            <strong>Disclaimer:</strong> This automated report is provided solely to
+            assist in the assessment of document accessibility. It is not a comprehensive
+            accessibility audit. To confirm that WCAG or PDF/UA standards are fully met,
+            human assessment by an accessibility specialist is recommended.
+            </para>
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.PdfDocument.LastAccessibilityReport">
+            <summary>
+            Gets the accessibility report generated during the most recent
+            <see cref="M:ObviousPDF.PdfDocument.Save(System.String)"/>, <see cref="M:ObviousPDF.PdfDocument.Save(System.IO.Stream)"/>,
+            <see cref="M:ObviousPDF.PdfDocument.Sign(System.String,ObviousPDF.PdfDigitalSignature)"/>, or
+            <see cref="M:ObviousPDF.PdfDocument.Sign(System.IO.Stream,ObviousPDF.PdfDigitalSignature)"/> call, or <c>null</c>
+            if <see cref="P:ObviousPDF.PdfDocument.GenerateAccessibilityReport"/> was <c>false</c> or no
+            save has occurred yet.
+            <para>
+            <strong>Disclaimer:</strong> This automated report is provided solely to
+            assist in the assessment of document accessibility. It is not a comprehensive
+            accessibility audit. To confirm that WCAG or PDF/UA standards are fully met,
+            human assessment by an accessibility specialist is recommended.
+            </para>
             </summary>
         </member>
         <member name="P:ObviousPDF.PdfDocument.Language">
@@ -4077,6 +4154,36 @@
             </summary>
             <returns>The root Document structure element to which children can be added.</returns>
         </member>
+        <member name="M:ObviousPDF.PdfDocument.EnableAccessibility(System.String,System.String)">
+            <summary>
+            Enables full PDF/UA accessibility with a single call. Sets the document
+            language, title, <see cref="P:ObviousPDF.PdfDocument.DisplayDocTitle"/>, PDF/UA-1 conformance,
+            tagged PDF, and turns on <strong>auto-tagging</strong> so that subsequent
+            calls to <see cref="M:ObviousPDF.PdfPageBuilder.AddText(System.String,System.Double,System.Double,ObviousPDF.PdfTextOptions)"/> and
+            <see cref="M:ObviousPDF.PdfPageBuilder.AddTextBlock(System.Collections.Generic.IEnumerable{System.String},System.Double,System.Double,ObviousPDF.PdfTextOptions)"/> automatically create
+            structure elements (paragraphs) without requiring the caller to use
+            the explicit tagged-content API.
+            <para>
+            After calling this method, you can still use the full tagged-content API
+            (<see cref="M:ObviousPDF.PdfPageBuilder.AddTaggedText(ObviousPDF.Accessibility.PdfStructureElement,System.String,System.Double,System.Double,ObviousPDF.PdfTextOptions)"/>,
+            <see cref="M:ObviousPDF.PdfPageBuilder.BeginTaggedContent(ObviousPDF.Accessibility.PdfStructureElement)"/>, etc.) for fine-grained
+            control. Content added inside a <see cref="M:ObviousPDF.PdfPageBuilder.BeginTaggedContent(ObviousPDF.Accessibility.PdfStructureElement)"/>
+            or <see cref="M:ObviousPDF.PdfPageBuilder.BeginArtifact(ObviousPDF.Accessibility.PdfArtifactType)"/> block is not auto-tagged.
+            </para>
+            <para>
+            ISO 14289-1 §7.1 (general requirements), §7.2 (text), §7.21 (fonts).
+            Matterhorn Protocol checkpoints 01, 06, 11.
+            </para>
+            </summary>
+            <param name="language">
+            BCP 47 language tag (e.g. <c>"en-US"</c>). Defaults to <c>"en"</c>.
+            </param>
+            <param name="title">
+            Document title shown in the viewer title bar. When <c>null</c>, the title
+            must be set separately via <c>Info.Title</c> before saving.
+            </param>
+            <returns>The root Document structure element for optional customization.</returns>
+        </member>
         <member name="M:ObviousPDF.PdfDocument.AddRoleMapping(System.String,ObviousPDF.Accessibility.StructureType)">
             <summary>
             Registers a mapping from a custom structure type name to a standard
@@ -4143,6 +4250,11 @@
             <param name="width">Page width in points (1 point = 1/72 inch).</param>
             <param name="height">Page height in points.</param>
             <returns>A <see cref="T:ObviousPDF.PdfPageBuilder"/> for adding content to the page.</returns>
+        </member>
+        <member name="P:ObviousPDF.PdfDocument.AutoTagEnabled">
+            <summary>
+            Gets whether auto-tagging is enabled via <see cref="M:ObviousPDF.PdfDocument.EnableAccessibility(System.String,System.String)"/>.
+            </summary>
         </member>
         <member name="M:ObviousPDF.PdfDocument.AddPage(System.ValueTuple{System.Double,System.Double})">
             <summary>
@@ -4293,6 +4405,13 @@
         </member>
         <member name="P:ObviousPDF.PdfDocument.DocumentBuildResult.PagesObj">
             <summary>Pages tree root object (for linearization).</summary>
+        </member>
+        <member name="M:ObviousPDF.PdfDocument.RunAccessibilityReportIfEnabled">
+            <summary>
+            Runs the accessibility checker when <see cref="P:ObviousPDF.PdfDocument.GenerateAccessibilityReport"/>
+            is enabled and stores the result in <see cref="P:ObviousPDF.PdfDocument.LastAccessibilityReport"/>.
+            Called by <see cref="M:ObviousPDF.PdfDocument.Save(System.IO.Stream)"/> and <see cref="M:ObviousPDF.PdfDocument.Sign(System.IO.Stream,ObviousPDF.PdfDigitalSignature)"/>.
+            </summary>
         </member>
         <member name="M:ObviousPDF.PdfDocument.BuildDocumentInternal(ObviousPDF.PdfAcroField)">
             <summary>
@@ -4900,6 +5019,13 @@
             </returns>
             <exception cref="T:System.ArgumentNullException"><paramref name="ranges"/> is null.</exception>
             <exception cref="T:System.ArgumentException">Ranges overlap or extend beyond the document.</exception>
+        </member>
+        <member name="M:ObviousPDF.PdfDocument.RebuildOutlinesAfterRemove(System.Int32)">
+            <summary>
+            Rebuilds the top-level outline list after a page removal,
+            dropping items that pointed to the removed page and promoting
+            their children so valid child bookmarks are preserved.
+            </summary>
         </member>
         <member name="T:ObviousPDF.PdfDocumentInfo">
             <summary>
@@ -5735,6 +5861,11 @@
             Gets the child outline items.
             </summary>
         </member>
+        <member name="P:ObviousPDF.PdfOutlineItem.ChildrenInternal">
+            <summary>
+            Gets the mutable child list for internal manipulation (page removal, split).
+            </summary>
+        </member>
         <member name="M:ObviousPDF.PdfOutlineItem.#ctor(System.String,System.Int32)">
             <summary>
             Creates a new outline item.
@@ -5795,6 +5926,20 @@
             <summary>
             Gets whether this page has content that is neither tagged nor marked
             as artifact. In a PDF/UA document, all content must be one or the other.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.PdfPageBuilder.IsAutoTagged">
+            <summary>
+            Gets whether auto-tagging is active on this page.
+            When <c>true</c>, <see cref="M:ObviousPDF.PdfPageBuilder.AddText(System.String,System.Double,System.Double,ObviousPDF.PdfTextOptions)"/> and <see cref="M:ObviousPDF.PdfPageBuilder.AddTextBlock(System.Collections.Generic.IEnumerable{System.String},System.Double,System.Double,ObviousPDF.PdfTextOptions)"/>
+            automatically create structure elements.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.PdfPageBuilder.SetAutoTagParent(ObviousPDF.Accessibility.PdfStructureElement)">
+            <summary>
+            Sets the auto-tag parent structure element for this page.
+            Called by <see cref="M:ObviousPDF.PdfDocument.AddPage(System.Double,System.Double)"/> when
+            <see cref="M:ObviousPDF.PdfDocument.EnableAccessibility(System.String,System.String)"/> has been used.
             </summary>
         </member>
         <member name="M:ObviousPDF.PdfPageBuilder.AddText(System.String,System.Double,System.Double,ObviousPDF.PdfTextOptions)">
@@ -6129,6 +6274,30 @@
             <param name="height">Display height in points.</param>
             <returns>This builder for method chaining.</returns>
         </member>
+        <member name="M:ObviousPDF.PdfPageBuilder.AddImage(ObviousPDF.PdfImage,System.Double,System.Double,System.Double,System.Double,System.String)">
+            <summary>
+            Adds an image with alternative text for accessibility. When auto-tagging
+            is enabled (via <see cref="M:ObviousPDF.PdfDocument.EnableAccessibility(System.String,System.String)"/>), a
+            <c>/Figure</c> structure element with <c>/Alt</c> text is created
+            automatically.
+            <para>
+            When auto-tagging is not active the <paramref name="altText"/> is
+            stored but the image is not tagged — use
+            <see cref="M:ObviousPDF.PdfPageBuilder.BeginTaggedContent(ObviousPDF.Accessibility.PdfStructureElement)"/> / <see cref="M:ObviousPDF.PdfPageBuilder.EndTaggedContent"/>
+            manually in that case.
+            </para>
+            </summary>
+            <param name="image">The image to embed (JPEG or PNG).</param>
+            <param name="x">X coordinate of the bottom-left corner in points.</param>
+            <param name="y">Y coordinate of the bottom-left corner in points.</param>
+            <param name="width">Display width in points.</param>
+            <param name="height">Display height in points.</param>
+            <param name="altText">
+            Alternative text describing the image for screen readers
+            (ISO 14289-1 §7.3, Matterhorn 13-004).
+            </param>
+            <returns>This builder for method chaining.</returns>
+        </member>
         <member name="M:ObviousPDF.PdfPageBuilder.AddImageScaled(ObviousPDF.PdfImage,System.Double,System.Double,System.Double,System.Double)">
             <summary>
             Adds an image (JPEG or PNG) to the page, scaling it uniformly so that it fits
@@ -6140,6 +6309,24 @@
             <param name="y">Y coordinate of the bottom-left corner in points.</param>
             <param name="maxWidth">Maximum display width in points.</param>
             <param name="maxHeight">Maximum display height in points.</param>
+            <returns>This builder for method chaining.</returns>
+        </member>
+        <member name="M:ObviousPDF.PdfPageBuilder.AddImageScaled(ObviousPDF.PdfImage,System.Double,System.Double,System.Double,System.Double,System.String)">
+            <summary>
+            Adds an image with alternative text, scaling it uniformly to fit within
+            the specified maximum dimensions while preserving the aspect ratio.
+            When auto-tagging is enabled, a <c>/Figure</c> structure element is
+            created automatically.
+            </summary>
+            <param name="image">The image to embed (JPEG or PNG).</param>
+            <param name="x">X coordinate of the bottom-left corner in points.</param>
+            <param name="y">Y coordinate of the bottom-left corner in points.</param>
+            <param name="maxWidth">Maximum display width in points.</param>
+            <param name="maxHeight">Maximum display height in points.</param>
+            <param name="altText">
+            Alternative text describing the image for screen readers
+            (ISO 14289-1 §7.3, Matterhorn 13-004).
+            </param>
             <returns>This builder for method chaining.</returns>
         </member>
         <member name="M:ObviousPDF.PdfPageBuilder.AddFormXObject(ObviousPDF.PdfFormXObject,System.Double,System.Double)">
@@ -6604,6 +6791,7 @@
             <param name="y">Vertical position in points from the bottom edge.</param>
             <param name="type">The artifact type, or null for a generic artifact.</param>
             <param name="options">Text rendering options, or null for defaults.</param>
+            <param name="artifactSubtype">Optional artifact subtype string, or null.</param>
             <returns>This builder for method chaining.</returns>
         </member>
         <member name="M:ObviousPDF.PdfPageBuilder.AssignMcid(ObviousPDF.Accessibility.PdfStructureElement)">

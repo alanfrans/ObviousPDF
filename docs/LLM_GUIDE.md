@@ -55,6 +55,173 @@ page.AddTaggedText(para, "Body text content.", 72, 710);
 doc.Save("accessible.pdf");
 ```
 
+### Easy Accessibility — One-Line Pattern (New in v1.2.0)
+
+```csharp
+using ObviousPDF;
+
+var doc = new PdfDocument();
+doc.EnableAccessibility("en-US", "My Document");
+// ↑ Sets Language, Title, DisplayDocTitle, PdfUA1, tagged PDF, auto-tagging
+
+var page = doc.AddPage();
+page.AddText("Title", 72, 720,               // auto-tagged as <P>
+    new PdfTextOptions { Font = StandardFont.HelveticaBold, FontSize = 24 });
+page.AddText("Body text.", 72, 690);          // auto-tagged as <P>
+
+var img = PdfImage.FromJpegFile("photo.jpg");
+page.AddImage(img, 72, 500, 200, 100,
+    "Photo description");                      // auto-tagged as <Figure>
+
+page.AddArtifactText("Page 1", 285, 30,
+    PdfArtifactType.Pagination);               // artifact (unchanged)
+
+doc.Save("easy_accessible.pdf");
+```
+
+Use `EnableAccessibility()` for quick documents. For rich semantics (headings, tables, lists), use manual tagging with `EnableTaggedPdf()`. Both approaches can be combined.
+
+### Easy Accessible JSON — One-Line Pattern (New in v1.2.0)
+
+```json
+{
+  "accessible": true,
+  "title": "My Document",
+  "language": "en-US",
+  "pages": [
+    {
+      "elements": [
+        { "type": "text", "text": "Section Title", "x": 72, "y": 720,
+          "fontSize": 24, "font": "HelveticaBold", "structureTag": "H1" },
+        { "type": "text", "text": "Body text.", "x": 72, "y": 690 },
+        { "type": "image", "path": "photo.jpg", "x": 72, "y": 500,
+          "width": 200, "height": 100, "altText": "Photo description" }
+      ]
+    }
+  ]
+}
+```
+
+With `"accessible": true`:
+- Tagged PDF, PDF/UA-1, language, title, and `DisplayDocTitle` are auto-set
+- All text is auto-tagged as `/P` (paragraph) unless `structureTag` overrides it
+- Images with `altText` are auto-tagged as `/Figure`
+- Standard fonts are auto-upgraded to embedded substitutes (PDF/UA §7.21)
+- Form fields are auto-wrapped in `/P` → `/Form` for correct structure placement
+- No `structureTree` section is required in the JSON
+
+The `structureTag` property on any content element overrides the default `/P` auto-tag. Use it for headings (`"H1"`–`"H6"`), block quotes (`"BlockQuote"`), code (`"Code"`), or any standard structure type. It is ignored when `artifact` is `true` or `structureId` is set.
+
+For a complete accessible form example, see the `form-1040ea.json` template.
+
+### Easy Accessible XML — Same Pattern in XML (v1.3.0)
+
+```xml
+<Document xmlns="https://obviouspdf.com/schemas/xml/1.0"
+          coordinateOrigin="topLeft"
+          accessible="true">
+  <DocumentSettings language="en-US" displayDocTitle="true">
+    <Info title="My Document" />
+  </DocumentSettings>
+  <Pages>
+    <Page size="Letter">
+      <Content>
+        <Text x="72" y="720" structureTag="H1">Section Title
+          <TextOptions fontRef="title-font" fontSize="24" />
+        </Text>
+        <Text x="72" y="690">Body text.</Text>
+      </Content>
+    </Page>
+  </Pages>
+</Document>
+```
+
+### Easy Accessible CSV — Same Pattern in CSV (v1.4.0)
+
+```csv
+[DOCUMENT]
+coordinateOrigin,topLeft
+accessible,true
+language,en-US
+info.title,"My Document"
+
+[FONTS]
+id,mode,standardFont,bundledFont,path,description,data
+title-font,standardFont,HelveticaBold,,,,
+
+[PAGE 1 size=Letter]
+type,x,y,...,text,...,structureTag,artifact,artifactType
+text,72,720,...,Section Title,...,H1,,
+text,72,690,...,Body text.,,,,
+```
+
+### Three Input Pipelines — Same Accessible Output
+
+| Pipeline | Package | Flag | Best For |
+|----------|---------|------|----------|
+| JSON | `ObviousPDF.Json` | `"accessible": true` | Web APIs, LLM/AI generation |
+| XML | `ObviousPDF.Xml` | `accessible="true"` | Enterprise workflows, XSLT |
+| CSV | `ObviousPDF.Csv` | `accessible,true` | Spreadsheets (Excel, Sheets) |
+
+All three pipelines share the same rendering engine and produce identical PDF output.
+
+### Accessibility Report Generation (New in v1.3.0)
+
+Generate an internal accessibility report when saving a PDF to catch common issues early:
+
+```csharp
+var doc = new PdfDocument();
+doc.EnableAccessibility("en-US", "My Document");
+doc.GenerateAccessibilityReport = true;
+
+var page = doc.AddPage();
+page.AddText("Hello", 72, 720);
+
+doc.Save("output.pdf");
+
+// Inspect the report
+if (doc.LastAccessibilityReport != null)
+{
+    Console.WriteLine(doc.LastAccessibilityReport.ToString());
+}
+```
+
+In the JSON pipeline, use `"generateAccessibilityReport": true` or set `GenerateAccessibilityReport` on `PdfJsonRendererOptions`:
+
+```json
+{
+  "accessible": true,
+  "generateAccessibilityReport": true,
+  "pages": [ ... ]
+}
+```
+
+```csharp
+var result = PdfJsonRenderer.RenderWithReport(json, "output.pdf");
+if (result.AccessibilityReport != null)
+    Console.WriteLine(result.AccessibilityReport.ToString());
+```
+
+In the CSV pipeline, use `generateAccessibilityReport,true` in the `[DOCUMENT]` section or set `GenerateAccessibilityReport` on `PdfCsvRendererOptions`:
+
+```csv
+[DOCUMENT]
+accessible,true
+generateAccessibilityReport,true
+
+[PAGE 1]
+type,x,y,text
+text,72,720,Hello
+```
+
+```csharp
+var result = PdfCsvRenderer.RenderWithReport(csv, "output.pdf");
+if (result.AccessibilityReport != null)
+    Console.WriteLine(result.AccessibilityReport.ToString());
+```
+
+> **⚠️ Disclaimer:** The automated accessibility report is provided solely to assist in the assessment of document accessibility. It is not a comprehensive accessibility audit. To confirm that WCAG or PDF/UA standards are fully met, human assessment by an accessibility specialist is recommended.
+
 ---
 
 ## Core Concepts
@@ -621,6 +788,9 @@ var part2 = dpartRoot.AddChild(startPageIndex: 3, endPageIndex: 5);
 
 Every accessible PDF must have ALL of the following:
 
+> **Shortcut:** `doc.EnableAccessibility("en-US", "Title")` handles steps 1–5 automatically.
+> For JSON: `"accessible": true`. Use manual tagging only when you need rich semantics (headings, tables, lists).
+
 1. **Document language:** `doc.Language = "en-US";`
 2. **Title:** `doc.Info.Title = "Document Title";`
 3. **Display title:** `doc.DisplayDocTitle = true;`
@@ -805,6 +975,8 @@ if (!report.IsFullyCompliant)
     Console.WriteLine(report.ToString());
 }
 ```
+
+> **⚠️ Disclaimer:** The accessibility checker and its reports are provided solely to assist in the assessment of document accessibility. They do not constitute a comprehensive accessibility audit. To confirm that WCAG or PDF/UA standards are fully met, human assessment by an accessibility specialist is recommended.
 
 ---
 

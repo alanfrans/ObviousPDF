@@ -35,6 +35,9 @@ doc.Save("output.pdf");
 ## Features
 
 - **Zero External Dependencies** — Ships as a standalone DLL; no NuGet package dependencies required at runtime
+- **Easy Accessibility (v1.2.0)** — One-line PDF/UA compliance: `doc.EnableAccessibility()` in C#, `"accessible": true` in JSON, `accessible="true"` in XML, or `accessible,true` in CSV
+- **Three Input Pipelines** — Generate accessible PDFs from **JSON** (`ObviousPDF.Json`), **XML** (`ObviousPDF.Xml`), or **CSV** (`ObviousPDF.Csv`) — all produce identical output
+- **Accessibility Report (v1.3.0)** — Automated accessibility feedback: `doc.GenerateAccessibilityReport = true` or `"generateAccessibilityReport": true` in JSON/XML/CSV
 - **PDF/UA Accessibility** — Built-in support for tagged PDFs, accessibility metadata, and automated compliance checking
 - **Encryption & Security** — Digital signatures, user/owner passwords, AES-128/AES-256 encryption
 - **Advanced Layouts** — Multi-column layouts, nested tables, reusable form templates (XObjects)
@@ -77,6 +80,8 @@ See [LICENSE](https://obviouspdf.com/license.html) for full details.
 3. Read the **[API Reference](https://obviouspdf.com/api-reference.html)** for comprehensive documentation
 4. Use the **[LLM Guide](https://github.com/alanfrans/ObviousPDF/blob/main/docs/LLM_GUIDE.md)** if working with AI coding assistants
 5. Visit **[obviouspdf.com](https://obviouspdf.com)** for examples and tutorials
+
+> **⚠️ Disclaimer:** The automated accessibility reports and checks provided by ObviousPDF are intended solely to assist in the assessment of document accessibility. They are not a comprehensive accessibility audit. To confirm that WCAG or PDF/UA standards are fully met, it is recommended to have human assessment by an accessibility specialist.
 
 ## Support
 

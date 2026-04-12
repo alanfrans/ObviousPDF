@@ -1,0 +1,230 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ObviousPDF.Csv</name>
+    </assembly>
+    <members>
+        <member name="T:ObviousPDF.Csv.PdfCsvRenderer">
+            <summary>
+            Renders a PDF from a CSV document conforming to the ObviousPDF CSV Format.
+            Implements the full processing pipeline defined in the CSV requirements.
+            </summary>
+            <remarks>
+            Internally, the CSV is deserialized into the shared document model and
+            then processed by the same rendering pipeline as the JSON renderer,
+            ensuring identical behavior across all three input formats.
+            </remarks>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.#ctor">
+            <summary>Initializes a new instance with default options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.#ctor(ObviousPDF.Csv.PdfCsvRendererOptions)">
+            <summary>Initializes a new instance with the specified options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.Render(System.String,System.String)">
+            <summary>Renders a CSV string to a file.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.Render(System.String,System.IO.Stream)">
+            <summary>Renders a CSV string to a stream.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.RenderFromFile(System.String,System.String)">
+            <summary>Reads a CSV file and renders the PDF to a file.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.RenderToFile(System.String,System.String)">
+            <summary>Renders using instance options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.RenderToStream(System.String,System.IO.Stream)">
+            <summary>Renders using instance options.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.BuildDocument(System.String)">
+            <summary>
+            Builds a <see cref="T:ObviousPDF.PdfDocument"/> from CSV without saving it.
+            Useful for inspection, accessibility checking, or further manipulation.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.BuildDocumentFromFile(System.String)">
+            <summary>
+            Reads a CSV file and builds a <see cref="T:ObviousPDF.PdfDocument"/> without saving it.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.RenderWithReport(System.String,System.String)">
+            <summary>
+            Renders a CSV string to a file and returns a <see cref="T:ObviousPDF.Csv.PdfCsvRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.RenderWithReport(System.String,System.IO.Stream)">
+            <summary>
+            Renders a CSV string to a stream and returns a <see cref="T:ObviousPDF.Csv.PdfCsvRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.RenderToFileWithReport(System.String,System.String)">
+            <summary>
+            Renders using instance options and returns a <see cref="T:ObviousPDF.Csv.PdfCsvRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderer.RenderToStreamWithReport(System.String,System.IO.Stream)">
+            <summary>
+            Renders using instance options and returns a <see cref="T:ObviousPDF.Csv.PdfCsvRenderResult"/>
+            containing the optional accessibility report.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Csv.PdfCsvRendererOptions">
+            <summary>
+            Configuration options for the CSV-to-PDF renderer.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvRendererOptions.BasePath">
+            <summary>
+            Base directory for resolving relative file paths in font, image, and attachment entries.
+            Defaults to the current working directory.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvRendererOptions.ImageFetchTimeoutSeconds">
+            <summary>
+            Timeout in seconds for fetching URL-based images. Default: 10.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvRendererOptions.MaxRedirects">
+            <summary>
+            Maximum number of HTTP redirects to follow for URL images. Default: 3.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvRendererOptions.AllowInsecureImageUrls">
+            <summary>
+            When true, skips SSL certificate validation for URL images. Default: false.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvRendererOptions.GenerateAccessibilityReport">
+            <summary>
+            When set to <c>true</c>, an internal accessibility report is generated
+            after building the PDF document. The report is available via
+            <see cref="P:ObviousPDF.Csv.PdfCsvRenderResult.AccessibilityReport"/> when using
+            <see cref="M:ObviousPDF.Csv.PdfCsvRenderer.RenderWithReport(System.String,System.String)"/> or
+            via <see cref="P:ObviousPDF.PdfDocument.LastAccessibilityReport"/> when using
+            <see cref="M:ObviousPDF.Csv.PdfCsvRenderer.BuildDocument(System.String)"/>.
+            <para>
+            <strong>Disclaimer:</strong> This automated report is provided solely to
+            assist in the assessment of document accessibility. It is not a comprehensive
+            accessibility audit. To confirm that WCAG or PDF/UA standards are fully met,
+            human assessment by an accessibility specialist is recommended.
+            </para>
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Csv.PdfCsvRenderException">
+            <summary>
+            Exception thrown when CSV-to-PDF rendering fails.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvRenderException.ValidationResult">
+            <summary>Gets the validation result that caused the exception, if any.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderException.#ctor(System.String)">
+            <summary>Initializes a new instance with the specified message.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderException.#ctor(System.String,ObviousPDF.Csv.PdfCsvValidationResult)">
+            <summary>Initializes a new instance with a message and the associated validation result.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvRenderException.#ctor(System.String,System.Exception)">
+            <summary>Initializes a new instance with a message and inner exception.</summary>
+        </member>
+        <member name="T:ObviousPDF.Csv.PdfCsvRenderResult">
+            <summary>
+            Contains the output of a CSV-to-PDF render operation, including an
+            optional accessibility report when
+            <see cref="P:ObviousPDF.Csv.PdfCsvRendererOptions.GenerateAccessibilityReport"/> or the
+            CSV <c>generateAccessibilityReport</c> setting is enabled.
+            </summary>
+            <remarks>
+            <strong>Disclaimer:</strong> The accessibility report included in this result
+            is provided solely to assist in the assessment of document accessibility. It
+            is not a comprehensive accessibility audit. To confirm that WCAG or PDF/UA
+            standards are fully met, human assessment by an accessibility specialist is
+            recommended.
+            </remarks>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvRenderResult.AccessibilityReport">
+            <summary>
+            The accessibility report generated during rendering, or <c>null</c>
+            if report generation was not enabled.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Csv.PdfCsvSerializer">
+            <summary>
+            Internal CSV parser that converts an ObviousPDF CSV document into the
+            shared <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> model used by the rendering pipeline.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvSerializer.Deserialize(System.String)">
+            <summary>
+            Deserializes a CSV string into a <see cref="T:ObviousPDF.Json.Models.JsonDocument"/> model.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Csv.PdfCsvValidationResult">
+            <summary>
+            Result of CSV document validation.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvValidationResult.IsValid">
+            <summary>
+            Whether the document passed all validation rules with no errors.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvValidationResult.Errors">
+            <summary>
+            Validation errors (the document cannot be rendered).
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvValidationResult.Warnings">
+            <summary>
+            Validation warnings (the document can be rendered but may have issues).
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvValidationResult.ToString">
+            <summary>
+            Returns a human-readable summary of all validation issues.
+            </summary>
+        </member>
+        <member name="T:ObviousPDF.Csv.PdfCsvValidationItem">
+            <summary>
+            A single validation finding.
+            </summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvValidationItem.RuleId">
+            <summary>Gets the rule identifier (e.g. CV001).</summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvValidationItem.Severity">
+            <summary>Gets the severity of the validation finding.</summary>
+        </member>
+        <member name="P:ObviousPDF.Csv.PdfCsvValidationItem.Message">
+            <summary>Gets the human-readable description of the finding.</summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvValidationItem.ToString">
+            <inheritdoc />
+        </member>
+        <member name="T:ObviousPDF.Csv.PdfCsvValidationSeverity">
+            <summary>
+            Severity of a validation item.
+            </summary>
+        </member>
+        <member name="F:ObviousPDF.Csv.PdfCsvValidationSeverity.Error">
+            <summary>A validation error that must be corrected.</summary>
+        </member>
+        <member name="F:ObviousPDF.Csv.PdfCsvValidationSeverity.Warning">
+            <summary>A validation warning that should be reviewed.</summary>
+        </member>
+        <member name="T:ObviousPDF.Csv.PdfCsvValidator">
+            <summary>
+            Validates an ObviousPDF CSV document against the cross-field rules CV001–CV028.
+            Internally deserializes the CSV to the shared model and delegates to validation logic.
+            </summary>
+        </member>
+        <member name="M:ObviousPDF.Csv.PdfCsvValidator.Validate(System.String)">
+            <summary>
+            Validates the CSV string by deserializing it and running all validation rules.
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -5,6 +5,42 @@ This project adheres to [Semantic Versioning](https://semver.org/).
 
 ---
 
+## [1.4.0] — 2026-07-15
+
+### Added
+
+- **ObviousPDF.Csv Project** — New `ObviousPDF.Csv` NuGet package: CSV-to-PDF rendering pipeline. Accepts section-based CSV documents conforming to the ObviousPDF CSV Format and produces tagged, accessible PDFs. Full API: `PdfCsvRenderer`, `PdfCsvValidator`, `PdfCsvRendererOptions`, `PdfCsvValidationResult`, `PdfCsvRenderResult`, `PdfCsvRenderException`. Supports all 26 content element types, fonts, images, FormXObjects, shadings, patterns, layers, attachments, outlines, page labels, structure tree, role mappings, encryption, and digital signatures. RFC 4180 compliant parsing with auto-detection of comma or tab delimiters.
+
+---
+
+## [1.3.0] — 2026-04-04
+
+### Added
+
+- **ObviousPDF.Xml Project** — New `ObviousPDF.Xml` NuGet package: XML-to-PDF rendering pipeline. Accepts XML documents conforming to the ObviousPDF XML Schema and produces tagged, accessible PDFs. Full API: `PdfXmlRenderer`, `PdfXmlValidator`, `PdfXmlRendererOptions`, `PdfXmlValidationResult`, `PdfXmlRenderResult`, `PdfXmlRenderException`. Supports all 26 content element types, fonts, images, FormXObjects, shadings, patterns, layers, attachments, outlines, page labels, structure tree, role mappings, encryption, and digital signatures.
+
+---
+
+## [1.2.0] — 2026-04-04
+
+### Added
+
+- **One-Line Accessibility Enablement** — `PdfDocument.EnableAccessibility()` configures PDF/UA-1 conformance with a single call, enabling auto-tagging for text and images.
+- **`PdfPageBuilder.AddImage(... altText)`** — New overload with alternative text and auto-tagging support.
+- **`PdfPageBuilder.AddImageScaled(... altText)`** — Scaled image variant with alt text and auto-tagging.
+- **JSON `"accessible": true`** — JSON documents can enable full PDF/UA accessibility with a single property.
+- **`JsonImageElement.AltText`** — Alt text property on JSON image elements.
+
+### Fixed
+
+- **Form structure element placement** — `/Form` elements now wrapped in `/P` to avoid PAC "Possibly inappropriate use of a Form structure element" warning (ISO 32000-2 Annex L, ISO 14289-1 §7.18.4).
+- **Auto-tag form field parent** — Form fields in `"accessible": true` mode now correctly attach to per-page `/Sect` instead of `/Document` root.
+- **Unicode mapping error** — Replaced unsupported `▶` (U+25B6) with `>` in form-1040ea.json (Matterhorn 10/31).
+- **JSON conformance token** — Fixed `"pdfUa"` value from `"1"` to `"PdfUA1"` in accessible mode.
+- **Stale outline items on page removal** — `RemovePage()` now removes bookmarks pointing to the deleted page and promotes their children (ISO 32000 §12.3.3).
+
+---
+
 ## [1.1.0] — 2026-04-03
 
 ### Added
